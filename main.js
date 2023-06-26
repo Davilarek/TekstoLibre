@@ -121,35 +121,81 @@ function loadSearchResults(currentUrlInfo) {
 		if (settings.strona) settings.strona = settings.strona.split(".html")[0];
 		const pageSelection = document.getElementsByClassName("page-selection")[0];
 		// debugger;
-		TekstowoAPIInstance.searchLyrics(settings.wykonawca, settings.tytul, settings.strona, true).then((searchResults) => {
+		// TekstowoAPIInstance.searchLyrics(settings.wykonawca, settings.tytul, settings.strona, true).then((searchResults) => {
+		// 	// return;
+		// 	console.log("Got API response:", searchResults);
+		// 	const keys = Object.keys(searchResults);
+		// 	const template = document.getElementsByClassName("result-item")[0].innerHTML;
+		// 	const baseElement = document.getElementsByClassName("results-container")[0];
+		// 	for (let i = 0; i < keys.length; i++) {
+		// 		const element = keys[i];
+		// 		const newElement = document.createElement("div");
+		// 		newElement.innerHTML = template;
+		// 		newElement.style.cssText = "";
+		// 		newElement.classList.add("result-item");
+		// 		newElement.getElementsByTagName("h3")[0].textContent = (i + 1).toString() + ".";
+		// 		const urlCreated = (useQuestionMark ? '?' : '') + "piosenka," + Object.values(searchResults)[i] + ".html";
+		// 		newElement.getElementsByTagName("p")[0].innerHTML = `<a style="color: unset; text-decoration: unset;" href="${urlCreated}">${element}</a>`;
+		// 		baseElement.appendChild(newElement);
+		// 	}
+
+		// 	/* TekstowoAPIInstance.getPagesForSong(settings.wykonawca, settings.tytul).then((result) => {
+		// 		for (let i = 0; i < result; i++) {
+		// 			const newButton = document.createElement('button');
+		// 			newButton.textContent = i + 1;
+		// 			newButton.onclick = () => {
+		// 				location.href = (useQuestionMark ? '?' : '') + "szukaj,wykonawca," + settings.wykonawca + ",tytul," + settings.tytul + ",strona," + (i + 1) + ".html";
+		// 			};
+		// 			pageSelection.appendChild(newButton);
+		// 		}
+		// 	}); */
+		// 	if (searchResults.INTERNAL_PAGE_COUNT) {
+		// 		const result = searchResults.INTERNAL_PAGE_COUNT;
+		// 		for (let i = 0; i < result; i++) {
+		// 			const newButton = document.createElement('button');
+		// 			newButton.textContent = i + 1;
+		// 			newButton.onclick = () => {
+		// 				location.href = (useQuestionMark ? '?' : '') + "szukaj,wykonawca," + settings.wykonawca + ",tytul," + settings.tytul + ",strona," + (i + 1) + ".html";
+		// 			};
+		// 			if ((i + 1).toString() == settings.strona || settings.strona == undefined)
+		// 				newButton.style.color = "red";
+		// 			pageSelection.appendChild(newButton);
+		// 		}
+		// 	}
+		// 	document.title = "Search - lyrics and translations";
+		// });
+		TekstowoAPIInstance.search(settings.wykonawca, settings.tytul, { page: settings.strona, includePageCount: true }).then(searchResults => {
 			console.log("Got API response:", searchResults);
-			const keys = Object.keys(searchResults);
 			const template = document.getElementsByClassName("result-item")[0].innerHTML;
 			const baseElement = document.getElementsByClassName("results-container")[0];
-			for (let i = 0; i < keys.length; i++) {
-				const element = keys[i];
+			const songsListKeys = Object.keys(searchResults.songs);
+			for (let i = 0; i < songsListKeys.length; i++) {
+				const element = songsListKeys[i];
 				const newElement = document.createElement("div");
 				newElement.innerHTML = template;
 				newElement.style.cssText = "";
 				newElement.classList.add("result-item");
 				newElement.getElementsByTagName("h3")[0].textContent = (i + 1).toString() + ".";
-				const urlCreated = (useQuestionMark ? '?' : '') + "piosenka," + Object.values(searchResults)[i] + ".html";
+				const urlCreated = (useQuestionMark ? '?' : '') + "piosenka," + Object.values(searchResults.songs)[i] + ".html";
 				newElement.getElementsByTagName("p")[0].innerHTML = `<a style="color: unset; text-decoration: unset;" href="${urlCreated}">${element}</a>`;
-				baseElement.appendChild(newElement);
+				// baseElement.appendChild(newElement);
+				baseElement.getElementsByClassName("putResultsHere")[0].before(newElement);
 			}
-
-			/* TekstowoAPIInstance.getPagesForSong(settings.wykonawca, settings.tytul).then((result) => {
-				for (let i = 0; i < result; i++) {
-					const newButton = document.createElement('button');
-					newButton.textContent = i + 1;
-					newButton.onclick = () => {
-						location.href = (useQuestionMark ? '?' : '') + "szukaj,wykonawca," + settings.wykonawca + ",tytul," + settings.tytul + ",strona," + (i + 1) + ".html";
-					};
-					pageSelection.appendChild(newButton);
-				}
-			}); */
-			if (searchResults.INTERNAL_PAGE_COUNT) {
-				const result = searchResults.INTERNAL_PAGE_COUNT;
+			const artistsListKeys = Object.keys(searchResults.artists);
+			for (let i = 0; i < artistsListKeys.length; i++) {
+				const element = artistsListKeys[i];
+				const newElement = document.createElement("div");
+				newElement.innerHTML = template;
+				newElement.style.cssText = "";
+				newElement.classList.add("result-item");
+				newElement.getElementsByTagName("h3")[0].textContent = (i + 1).toString() + ".";
+				const urlCreated = (useQuestionMark ? '?' : '') + "piosenki_artysty," + Object.values(searchResults.artists)[i] + ".html";
+				newElement.getElementsByTagName("p")[0].innerHTML = `<a style="color: unset; text-decoration: unset;" href="${urlCreated}">${element}</a>`;
+				// baseElement.appendChild(newElement);
+				baseElement.getElementsByClassName("putResultsHere")[1].before(newElement);
+			}
+			if (searchResults.pageCount) {
+				const result = searchResults.pageCount;
 				for (let i = 0; i < result; i++) {
 					const newButton = document.createElement('button');
 					newButton.textContent = i + 1;
