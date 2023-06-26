@@ -16,6 +16,33 @@ function initializeTekstowo(proxyType = 2) {
 //         break;
 // }
 
+/**
+ * From https://github.com/Davilarek/Tekstowo-Unofficial-API/blob/4c94af70a906490cb64b05bc288259adb8c720cb/index.js#L415
+ * @param {string} text
+ * @param {string} start
+ * @param {string} end
+ * @returns {string[]}
+ */
+function getTextBetween(text, start, end) {
+	const results = [];
+	let startIndex = 0;
+
+	while (startIndex < text.length) {
+		const startIdx = text.indexOf(start, startIndex);
+		if (startIdx === -1) {
+			break;
+		}
+		const endIdx = text.indexOf(end, startIdx + start.length);
+		if (endIdx === -1) {
+			break;
+		}
+		const match = text.substring(startIdx + start.length, endIdx);
+		results.push(match);
+		startIndex = endIdx + end.length;
+	}
+	return results;
+}
+
 function setupElements() {
 	const searchButton = document.getElementById(`searchButton`);
 	const songSearch = document.getElementById(`songSearch`);
@@ -57,13 +84,25 @@ function loadLyricsViewer(currentUrlInfo) {
 			const metaDataKeys = Object.keys(metaData);
 			for (let i = 0; i < metaDataKeys.length; i++) {
 				const element = metaDataKeys[i];
+				let val = metaData[element];
+				if (typeof val !== 'string')
+					throw new Error("Metadata value should be string, but is a type \"" + typeof val + "\".");
+				const splitVal = val.split(", ");
+				// const t = getTextBetween(splitVal[0], "<a", "</a>").map(x => x.split(">")[1]);
+				// debugger;
+				for (let j = 0; j < splitVal.length; j++) {
+					const mod = getTextBetween(splitVal[j], "<a", "</a>").map(x => x.split(">")[1]);
+					if (mod.length > 0)
+						splitVal[j] = mod;
+				}
+				val = splitVal.join(", ");
 
 				const row = document.createElement('tr');
 				const cell1 = document.createElement('td');
 				const cell2 = document.createElement('td');
 
 				cell1.innerHTML = "<strong>" + element + ":</strong>";
-				cell2.textContent = metaData[element];
+				cell2.textContent = val;
 				row.appendChild(cell1);
 				row.appendChild(cell2);
 
