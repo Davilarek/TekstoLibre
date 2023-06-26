@@ -117,7 +117,7 @@ function loadSearchResults(currentUrlInfo) {
 					newButton.onclick = () => {
 						location.href = (useQuestionMark ? '?' : '') + "szukaj,wykonawca," + settings.wykonawca + ",tytul," + settings.tytul + ",strona," + (i + 1) + ".html";
 					};
-					if ((i + 1).toString() == settings.strona)
+					if ((i + 1).toString() == settings.strona || settings.strona == undefined)
 						newButton.style.color = "red";
 					pageSelection.appendChild(newButton);
 				}
