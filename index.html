@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Tekstowo.pl Alternative Frontend</title>
+	<!-- <style ="./styles/mainPack.css"></style> -->
+	<link rel="stylesheet" type="text/css" href="./styles/mainPack.css">
+	<!-- <link rel="icon" href="https://www.tekstowo.pl/static/v2/images/favicons/icon-192.png">  -->
+	<!-- we should not since there is no permission from Tekstowo.pl to use it's icon -->
+</head>
+
+<body>
+	<!-- <script src="./TekstowoAPI.js"></script> -->
+	<script type="application/javascript"
+		src="https://github.com/Davilarek/Tekstowo-Unofficial-API/releases/latest/download/TekstowoAPI-browser.js"></script>
+
+	<h1 onclick="location.href=`/`" style="cursor: pointer;">Tekstowo.pl Alternative Frontend</h1>
+	<!-- <h4 style="text-align: center;"><a href="#" onclick="flipBodyColors()">Flip colors</a></h4> -->
+	<!-- frontpage:
+		"Wasza lista przebojów": https://www.tekstowo.pl/rankingi,6-miesiecy.html first 10 elements
+		"Popularne teksty piosenek": https://www.tekstowo.pl/rankingi,miesiac,popularne.html first 10 elements
+		but probably will use caching, to avoid spamming
+	-->
+	<h4 style="text-align: center;"><a style="color: unset;" href="#" onclick="openOfficial()">Open official</a></h4>
+	<div class="search-bar">
+		<!-- <input id="searchBar" type="text" placeholder="Search"> -->
+		<input id="artistSearch" type="text" placeholder="Artist">
+		<input id="songSearch" type="text" placeholder="Song Name">
+		<button id="searchButton" type="button">Search</button>
+	</div>
+	<span id="injectionPoint" style="display: none;"></span>
+	<script src="./main.js"></script>
+</body>
+
+</html>

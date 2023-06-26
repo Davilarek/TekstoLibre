@@ -1,0 +1,91 @@
+<style>
+	.container {
+		display: flex;
+		margin: 20px auto;
+		max-width: 800px;
+	}
+
+	.lyrics-column,
+	.translation-column {
+		flex: 1;
+		padding: 10px;
+	}
+
+	.lyrics-column {
+		border-right: 1px solid #666;
+	}
+
+	h2 {
+		margin-top: 0;
+	}
+
+	p {
+		margin: 0;
+		/* white-space: nowrap; */
+		/* overflow: hidden; */
+		/* text-overflow: ellipsis; */
+	}
+
+	@media (max-width: 600px) {
+		.container {
+			flex-direction: column;
+		}
+
+		.lyrics-column,
+		.translation-column {
+			border-right: none;
+		}
+	}
+
+	.metadata-section {
+		display: flex;
+		justify-content: center;
+		margin-top: 20px;
+		max-width: 800px;
+		margin: 20px auto;
+	}
+
+	.metadata-section table {
+		margin: 0 5px;
+		background-color: #444;
+		border: none;
+		color: #fff;
+		padding: 5px 10px;
+	}
+
+	@media (max-width: 600px) {
+		.metadata-section {
+			flex-wrap: wrap;
+			justify-content: flex-start;
+			padding: 0 10px;
+		}
+
+		.metadata-section table {
+			width: 100%;
+			margin-bottom: 10px;
+		}
+	}
+</style>
+
+<div class="header">
+	<h1></h1>
+</div>
+<br>
+<div class="container">
+	<div class="lyrics-column">
+		<h2>Lyrics</h2>
+		<p>
+			<!-- Lyrics go here -->
+		</p>
+	</div>
+	<div class="translation-column">
+		<h2>Translation</h2>
+		<p>
+			<!-- Translation goes here -->
+		</p>
+	</div>
+</div>
+
+<div class="metadata-section">
+
+</div>

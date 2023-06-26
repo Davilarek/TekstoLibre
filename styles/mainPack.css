@@ -1,0 +1,36 @@
+body {
+	background-color: #111;
+	color: #fff;
+	font-family: Arial, sans-serif;
+	margin: 0;
+	padding: 0;
+	overflow-y: scroll;
+}
+
+h1 {
+	text-align: center;
+}
+
+.search-bar {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	margin-bottom: 10px;
+}
+
+.search-bar input[type="text"] {
+	padding: 5px;
+	width: 150px;
+}
+
+.search-bar input[type="text"]:first-child {
+	margin-right: 10px;
+}
+
+.search-bar button {
+	padding: 5px 10px;
+	background-color: #444;
+	border: none;
+	color: #fff;
+	cursor: pointer;
+}
