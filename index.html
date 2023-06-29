@@ -17,7 +17,8 @@
 		src="https://github.com/Davilarek/Tekstowo-Unofficial-API/releases/latest/download/TekstowoAPI-browser.js"></script>
 
 	<!-- <h1 onclick="location.search.length > 0 ? location.search=`` : location.pathname = ''" style="cursor: pointer;">Tekstowo.pl Alternative Frontend</h1> -->
-	<h1 onclick="location.href = '/'" style="cursor: pointer;">Tekstowo.pl Alternative Frontend</h1>
+	<h1 onclick="location.href = location.pathname.substring(0, location.pathname.lastIndexOf(`/`)) + '/'"
+		style="cursor: pointer;">Tekstowo.pl Alternative Frontend</h1>
 	<!-- <h4 style="text-align: center;"><a href="#" onclick="flipBodyColors()">Flip colors</a></h4> -->
 	<!-- frontpage:
 		"Wasza lista przebojów": https://www.tekstowo.pl/rankingi,6-miesiecy.html first 10 elements
