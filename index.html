@@ -16,14 +16,16 @@
 	<script type="application/javascript"
 		src="https://github.com/Davilarek/Tekstowo-Unofficial-API/releases/latest/download/TekstowoAPI-browser.js"></script>
 
-	<h1 onclick="location.search=``" style="cursor: pointer;">Tekstowo.pl Alternative Frontend</h1>
+	<!-- <h1 onclick="location.search.length > 0 ? location.search=`` : location.pathname = ''" style="cursor: pointer;">Tekstowo.pl Alternative Frontend</h1> -->
+	<h1 onclick="location.href = '/'" style="cursor: pointer;">Tekstowo.pl Alternative Frontend</h1>
 	<!-- <h4 style="text-align: center;"><a href="#" onclick="flipBodyColors()">Flip colors</a></h4> -->
 	<!-- frontpage:
 		"Wasza lista przebojów": https://www.tekstowo.pl/rankingi,6-miesiecy.html first 10 elements
 		"Popularne teksty piosenek": https://www.tekstowo.pl/rankingi,miesiac,popularne.html first 10 elements
 		but probably will use caching, to avoid spamming
 	-->
-	<h4 style="text-align: center;"><a style="color: unset;" href="#" onclick="openOfficial()">Open official</a></h4>
+	<h4 style="text-align: center;"><span style="color: unset; text-decoration: underline; cursor: pointer;" href="#"
+			onclick="openOfficial()">Open official</span></h4>
 	<div class="search-bar">
 		<!-- <input id="searchBar" type="text" placeholder="Search"> -->
 		<input id="artistSearch" type="text" placeholder="Artist">
