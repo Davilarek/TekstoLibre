@@ -231,7 +231,10 @@ function processOperation() {
 		case "szukaj":
 			loadSearchResults(currentUrl);
 			break;
+		case "":
+			break;
 		default:
+			alert("Operation (currently) unsupported.");
 			break;
 	}
 }
