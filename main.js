@@ -1,13 +1,35 @@
 // const useQuestionMark = location.search.length > 0;
 let useQuestionMark = true;
-fetch("./selfHost").then(x => {
-	useQuestionMark = x.status != 200;
-});
+try {
+	fetch("./selfHost").then(x => {
+		useQuestionMark = x.status != 200;
+	});
+}
+// eslint-disable-next-line no-inline-comments
+catch { /* empty */ }
+
 
 function initializeTekstowo(proxyType = 2) {
-	const TekstowoAPI = require("./TekstowoAPI");
-	const TekstowoAPIInstance = new TekstowoAPI(fetch, proxyType);
-	return TekstowoAPIInstance;
+	try {
+		const TekstowoAPI = require("./TekstowoAPI");
+		const TekstowoAPIInstance = new TekstowoAPI(fetch, proxyType);
+		return TekstowoAPIInstance;
+	}
+	catch (error) {
+		console.error("TekstowoAPI loading failed. Details:", error);
+		// return null;
+		const dummyObject = {};
+
+		const proxy = new Proxy(dummyObject, {
+			get(target, property) {
+				if (!(property in target)) {
+					target[property] = () => { throw new Error("TekstowoAPI Load Failed!"); };
+				}
+				return target[property];
+			},
+		});
+		return proxy;
+	}
 }
 
 // const currentUrl = location.search.slice(1);
