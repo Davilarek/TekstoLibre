@@ -105,7 +105,10 @@ function loadLyricsViewer(currentUrlInfo) {
 				const cell1 = document.createElement('td');
 				const cell2 = document.createElement('td');
 
-				cell1.innerHTML = "<strong>" + element + ":</strong>";
+				// cell1.innerHTML = "<strong>" + element + ":</strong>";
+				const strong = document.createElement("strong");
+				strong.textContent = element + ":";
+				cell1.appendChild(strong);
 				cell2.textContent = val;
 				row.appendChild(cell1);
 				row.appendChild(cell2);
@@ -181,7 +184,12 @@ function loadSearchResults(currentUrlInfo) {
 				newElement.classList.add("result-item");
 				newElement.getElementsByTagName("h3")[0].textContent = (i + 1).toString() + ".";
 				const urlCreated = (useQuestionMark ? '?' : '') + "piosenka," + Object.values(searchResults.songs)[i] + ".html";
-				newElement.getElementsByTagName("p")[0].innerHTML = `<a style="color: unset; text-decoration: unset;" href="${urlCreated}">${element}</a>`;
+				// newElement.getElementsByTagName("p")[0].innerHTML = `<a style="color: unset; text-decoration: unset;" href="${urlCreated}">${element}</a>`; // that's lazy
+				const aElementForP = document.createElement('a');
+				aElementForP.style.cssText = `color: unset; text-decoration: unset;`;
+				aElementForP.href = urlCreated;
+				aElementForP.textContent = element;
+				newElement.getElementsByTagName("p")[0].appendChild(aElementForP);
 				// baseElement.appendChild(newElement);
 				baseElement.getElementsByClassName("putResultsHere")[0].before(newElement);
 			}
@@ -194,7 +202,12 @@ function loadSearchResults(currentUrlInfo) {
 				newElement.classList.add("result-item");
 				newElement.getElementsByTagName("h3")[0].textContent = (i + 1).toString() + ".";
 				const urlCreated = (useQuestionMark ? '?' : '') + "piosenki_artysty," + Object.values(searchResults.artists)[i] + ".html";
-				newElement.getElementsByTagName("p")[0].innerHTML = `<a style="color: unset; text-decoration: unset;" href="${urlCreated}">${element}</a>`;
+				// newElement.getElementsByTagName("p")[0].innerHTML = `<a style="color: unset; text-decoration: unset;" href="${urlCreated}">${element}</a>`; // that's lazy
+				const aElementForP = document.createElement('a');
+				aElementForP.style.cssText = `color: unset; text-decoration: unset;`;
+				aElementForP.href = urlCreated;
+				aElementForP.textContent = element;
+				newElement.getElementsByTagName("p")[0].appendChild(aElementForP);
 				// baseElement.appendChild(newElement);
 				baseElement.getElementsByClassName("putResultsHere")[1].before(newElement);
 			}
