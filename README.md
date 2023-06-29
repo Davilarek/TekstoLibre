@@ -3,7 +3,10 @@ A free &amp; open source Tekstowo front-end.
 
 It currently uses latest build of [Tekstowo-Unofficial-API](https://github.com/Davilarek/Tekstowo-Unofficial-API) with SirJoshProxy option.
 ## Self-hosting
-I recommend using [http-server](https://www.npmjs.com/package/http-server), but soon I will write a server for this (currently this project targets Github Pages).
+To self host, you need to have Node.js installed (latest LTS recommended).
+  1. Clone this repo
+  2. `cd` to your cloned directory
+  3. `node server.js`
 
 ## Features
 - [x] Search bar
