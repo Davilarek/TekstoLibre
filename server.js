@@ -22,9 +22,9 @@ const requestHandler = (req, res) => {
     //     return;
     // }
     const test = path.join(__dirname, req.url);
-    console.log(test);
+    // console.log(test);
     const parsed = path.parse(test);
-    console.log(parsed);
+    // console.log(parsed);
     if (parsed.base == "selfHost" && parsed.dir == __dirname) {
         res.writeHead(200);
         res.end();
