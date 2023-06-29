@@ -1,4 +1,8 @@
-const useQuestionMark = true;
+// const useQuestionMark = location.search.length > 0;
+let useQuestionMark = true;
+fetch("./selfHost").then(x => {
+	useQuestionMark = x.status != 200;
+});
 
 function initializeTekstowo(proxyType = 2) {
 	const TekstowoAPI = require("./TekstowoAPI");
@@ -222,7 +226,7 @@ function createObjectFromCommaSeparatedString(target) {
 	return finalObject;
 }
 function processOperation() {
-	const currentUrl = location.search.slice(1);
+	const currentUrl = (useQuestionMark ? location.search.slice(1) : location.href.substring(location.href.lastIndexOf('/') + 1));
 	const operation = currentUrl.split(",")[0];
 	switch (operation) {
 		case "piosenka":
@@ -247,8 +251,9 @@ function flipBodyColors() {
 }
 // eslint-disable-next-line no-unused-vars
 function openOfficial() {
-	const url = "https://tekstowo.pl/" + location.search.slice(1);
+	const url = "https://tekstowo.pl/" + (useQuestionMark ? location.search.slice(1) : location.href.substring(location.href.lastIndexOf('/') + 1));
 	window.open(url, '_blank').focus();
 }
 setupElements();
-processOperation();
+setTimeout(processOperation, 500);
+// processOperation(); // race condition; don't use directly!
