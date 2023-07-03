@@ -1,7 +1,7 @@
 // const useQuestionMark = location.search.length > 0;
 let useQuestionMark = true;
 try {
-	fetch("./selfHost").then(x => {
+	fetch("./selfHost", { "method": "HEAD" }).then(x => {
 		useQuestionMark = x.status != 200;
 	});
 }
