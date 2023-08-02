@@ -222,11 +222,11 @@ const settingsManager = (() => {
 			defaultValue: false,
 			type: "checkbox",
 		},
-		"test": {
-			propName: "test",
-			type: "checkbox",
-			description: "test123",
+		"enableVideos": {
+			propName: "enableVideos",
+			description: "Enable videos for lyrics?",
 			defaultValue: false,
+			type: "checkbox",
 			required: [
 				{
 					settingName: "enableUseOfLocalStorage",
@@ -234,30 +234,18 @@ const settingsManager = (() => {
 				},
 			],
 		},
-		"test2": {
-			propName: "test2",
-			type: "checkbox",
-			description: "test123456",
-			defaultValue: false,
-			required: [
-				{
-					settingName: "enableUseOfLocalStorage",
-					toBeValue: true,
-				},
-			],
-		},
-		"test3": {
-			propName: "test3",
+		"embedUrlForVideos": {
+			propName: "embedUrlForVideos",
+			description: "The url for video embeds",
+			defaultValue: "https://yewtu.be/embed/",
 			type: "text",
-			description: "test999",
-			defaultValue: "hmmmm",
 			required: [
 				{
 					settingName: "enableUseOfLocalStorage",
 					toBeValue: true,
 				},
 				{
-					settingName: "test2",
+					settingName: "enableVideos",
 					toBeValue: true,
 				},
 			],
