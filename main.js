@@ -92,7 +92,7 @@ const TekstowoAPIInstance = initializeTekstowo();
 function loadLyricsViewer(currentUrlInfo) {
 	injectHTML('./presets/song.html').then(() => {
 		const operation = currentUrlInfo.split(",")[0];
-		TekstowoAPIInstance.extractLyrics(currentUrlInfo.split(operation + ",")[1].split(".html")[0], true).then((lyrics) => {
+		TekstowoAPIInstance.extractLyrics(currentUrlInfo.split(operation + ",")[1].split(".html")[0], { withMetadata: true }).then((lyrics) => {
 			console.log("Got API response:", lyrics);
 			if (!lyrics) return;
 			const lyricsNormal = document.getElementsByClassName("lyrics-column")[0].getElementsByTagName("p")[0];
