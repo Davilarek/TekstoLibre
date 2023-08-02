@@ -1,4 +1,7 @@
+// eslint-disable-next-line spaced-comment
+/// <reference path="settings-manager.js"/>
 // const useQuestionMark = location.search.length > 0;
+/* globals settingsManager */
 let useQuestionMark = true;
 const isSelfHostedPromise = new Promise(resolve => {
 	fetch("./selfHost", { "method": "HEAD" }).then(x => {
@@ -30,6 +33,12 @@ function initializeTekstowo(proxyType = 2) {
 	}
 }
 
+// eslint-disable-next-line no-unused-vars
+function initializeTekstowoAnyway(proxyType = 2) {
+	const TekstowoAPI = require("./TekstowoAPI");
+	const TekstowoAPIInstance = new TekstowoAPI(fetch, proxyType);
+	return TekstowoAPIInstance;
+}
 // const currentUrl = location.search.slice(1);
 // const operation = currentUrl.split(",")[0];
 // switch (operation) {
@@ -89,10 +98,11 @@ async function injectHTML(name) {
 }
 // eslint-disable-next-line no-unused-vars
 const TekstowoAPIInstance = initializeTekstowo();
+// const TekstowoAPIInstance = initializeTekstowoAnyway();
 function loadLyricsViewer(currentUrlInfo) {
 	injectHTML('./presets/song.html').then(() => {
 		const operation = currentUrlInfo.split(",")[0];
-		TekstowoAPIInstance.extractLyrics(currentUrlInfo.split(operation + ",")[1].split(".html")[0], { withMetadata: true }).then((lyrics) => {
+		TekstowoAPIInstance.extractLyrics(currentUrlInfo.split(operation + ",")[1].split(".html")[0], { withMetadata: true, withVideoId: settingsManager.settings.enableVideos.value }).then((lyrics) => {
 			console.log("Got API response:", lyrics);
 			if (!lyrics) return;
 			const lyricsNormal = document.getElementsByClassName("lyrics-column")[0].getElementsByTagName("p")[0];
@@ -134,6 +144,11 @@ function loadLyricsViewer(currentUrlInfo) {
 				row.appendChild(cell2);
 
 				newTable.appendChild(row);
+			}
+			if (lyrics.videoId) {
+				const videoFrame = document.getElementById("videoFrame");
+				videoFrame.style.display = "unset";
+				videoFrame.children[0].src = settingsManager.settings.embedUrlForVideos.value + lyrics.videoId;
 			}
 			document.getElementsByClassName("metadata-section")[0].appendChild(newTable);
 			document.title = lyrics.lyricsName + " - lyrics and translation of the song";
@@ -293,6 +308,8 @@ function openOfficial() {
 }
 // setupElements();
 // setTimeout(processOperation, 500);
+if (localStorage && localStorage.getItem("settings"))
+	settingsManager.load(localStorage.getItem("settings"));
 setupElements();
 isSelfHostedPromise.then(processOperation);
 // processOperation(); // race condition; don't use directly!

@@ -20,7 +20,7 @@ To self host, you need to have Node.js installed (latest LTS recommended).
 - [ ] Translation edit history
 - [ ] Lyrics edit history
 - [ ] Comments view
-- [ ] Song's video
+- [x] Song's video
 
 ## Not planned
 - Same as in [Tekstowo-Unofficial-API#not-planned](https://github.com/Davilarek/Tekstowo-Unofficial-API#not-planned)
