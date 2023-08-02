@@ -261,6 +261,8 @@ function createObjectFromCommaSeparatedString(target) {
 	return finalObject;
 }
 function processOperation() {
+	const openOfficialHyperlink = document.getElementById(`openOfficialHyperlink`);
+	openOfficialHyperlink.href = createOfficialUrl();
 	const currentUrl = (useQuestionMark ? location.search.slice(1) : location.href.substring(location.href.lastIndexOf('/') + 1));
 	const operation = currentUrl.split(",")[0];
 	switch (operation) {
@@ -284,10 +286,12 @@ function flipBodyColors() {
 	document.body.style.backgroundColor = originalBody;
 	document.body.style.color = originalBackgroundBody;
 }
+function createOfficialUrl() {
+	return "https://tekstowo.pl/" + (useQuestionMark ? location.search.slice(1) : location.href.substring(location.href.lastIndexOf('/') + 1));
+}
 // eslint-disable-next-line no-unused-vars
 function openOfficial() {
-	const url = "https://tekstowo.pl/" + (useQuestionMark ? location.search.slice(1) : location.href.substring(location.href.lastIndexOf('/') + 1));
-	window.open(url, '_blank').focus();
+	window.open(createOfficialUrl(), '_blank').focus();
 }
 setupElements();
 setTimeout(processOperation, 500);
