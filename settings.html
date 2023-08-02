@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Tekstowo.pl Alternative Frontend</title>
+	<link rel="stylesheet" type="text/css" href="./styles/mainPack.css">
+	<link rel="stylesheet" type="text/css" href="./styles/settingsPack.css">
+	<!-- <link rel="icon" href="https://www.tekstowo.pl/static/v2/images/favicons/icon-192.png">  -->
+	<!-- we should not since there is no permission from Tekstowo.pl to use their icon -->
+</head>
+
+<body>
+	<h1 onclick="location.href = location.pathname.substring(0, location.pathname.lastIndexOf(`/`)) + '/'"
+		style="cursor: pointer;">Tekstowo.pl Alternative Frontend</h1>
+	<div class="settings-container">
+		<h1>
+			Settings
+			<button class="apply-button">Apply</button>
+		</h1>
+	</div>
+	<script src="./settings-manager.js"></script>
+	<script>
+		if (localStorage && localStorage.getItem("settings"))
+			settingsManager.load(localStorage.getItem("settings"));
+		document.getElementsByClassName("settings-container")[0].append(...settingsManager.toFullHTML().children);
+		document.getElementsByClassName("apply-button")[0].onclick = () => {
+			if (settingsManager.settings.enableUseOfLocalStorage.value == true) {
+				localStorage.setItem("settings", settingsManager.toString())
+			}
+			else if (settingsManager.originalSettings.enableUseOfLocalStorage.value == true) {
+				localStorage.clear();
+			}
+		};
+	</script>
+</body>
+
+</html>
