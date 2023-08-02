@@ -1,13 +1,11 @@
 // const useQuestionMark = location.search.length > 0;
 let useQuestionMark = true;
-try {
+const isSelfHostedPromise = new Promise(resolve => {
 	fetch("./selfHost", { "method": "HEAD" }).then(x => {
 		useQuestionMark = x.status != 200;
-	});
-}
-// eslint-disable-next-line no-inline-comments
-catch { /* empty */ }
-
+		resolve();
+	}).catch(console.error);
+});
 
 function initializeTekstowo(proxyType = 2) {
 	try {
@@ -293,6 +291,8 @@ function createOfficialUrl() {
 function openOfficial() {
 	window.open(createOfficialUrl(), '_blank').focus();
 }
+// setupElements();
+// setTimeout(processOperation, 500);
 setupElements();
-setTimeout(processOperation, 500);
+isSelfHostedPromise.then(processOperation);
 // processOperation(); // race condition; don't use directly!
