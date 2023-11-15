@@ -162,7 +162,7 @@ function loadSearchResults(currentUrlInfo) {
 		if (settings.tytul) settings.tytul = settings.tytul.split(".html")[0];
 		if (settings.strona) settings.strona = settings.strona.split(".html")[0];
 		const pageSelection = document.getElementsByClassName("page-selection")[0];
-		const offsetNum = calculatePageOffset(settings.strona - 1);
+		const offsetNum = calculatePageOffset((settings.strona ?? 1) - 1);
 		// debugger;
 		// TekstowoAPIInstance.searchLyrics(settings.wykonawca, settings.tytul, settings.strona, true).then((searchResults) => {
 		// 	// return;
@@ -296,7 +296,7 @@ function loadArtistSongList(currentUrlInfo) {
 		}
 		TekstowoAPIInstance.getArtistsSongList(operations[0], options).then(response => {
 			console.log("Got API response:", response);
-			const offsetNum = calculatePageOffset(options.page - 1);
+			const offsetNum = calculatePageOffset((options.page ?? 1) - 1);
 			const template = document.getElementsByClassName("result-item")[0].innerHTML;
 			const baseElement = document.getElementsByClassName("results-container")[0];
 			document.getElementById("artistsHeader").remove();
