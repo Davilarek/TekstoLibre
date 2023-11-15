@@ -19,6 +19,11 @@ const settingsManager = (() => {
 	 * @prop {string} propName
 	 */
 
+	/**
+	 * @template T
+	 * @param {T} obj
+	 * @returns {T}
+	 */
 	function deepClone(obj) {
 		return JSON.parse(JSON.stringify(obj));
 	}
