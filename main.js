@@ -10,6 +10,16 @@ const isSelfHostedPromise = new Promise(resolve => {
 	}).catch(console.error);
 });
 
+// eslint-disable-next-line no-unused-vars
+function initializeTekstowoAnyway(proxyType = 2) {
+	const TekstowoAPI = require("./TekstowoAPI");
+	const TekstowoAPIInstance = new TekstowoAPI(fetch, proxyType);
+	return TekstowoAPIInstance;
+}
+
+/**
+ * @returns {typeof initializeTekstowoAnyway extends () => infer R ? R : any} Note: this is not official JSDOC syntax
+ */
 function initializeTekstowo(proxyType = 2) {
 	try {
 		const TekstowoAPI = require("./TekstowoAPI");
@@ -31,13 +41,6 @@ function initializeTekstowo(proxyType = 2) {
 		});
 		return proxy;
 	}
-}
-
-// eslint-disable-next-line no-unused-vars
-function initializeTekstowoAnyway(proxyType = 2) {
-	const TekstowoAPI = require("./TekstowoAPI");
-	const TekstowoAPIInstance = new TekstowoAPI(fetch, proxyType);
-	return TekstowoAPIInstance;
 }
 // const currentUrl = location.search.slice(1);
 // const operation = currentUrl.split(",")[0];
