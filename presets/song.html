@@ -65,6 +65,39 @@
 			margin-bottom: 10px;
 		}
 	}
+
+	.comments-section {
+		display: flex;
+		justify-content: center;
+		margin-top: 20px;
+		max-width: 800px;
+		margin: 20px auto;
+		flex-direction: column;
+	}
+
+	.comments-section button {
+		margin: 5px;
+		background-color: #444;
+		border: none;
+		color: #fff;
+		padding: 5px 10px;
+		cursor: pointer;
+		flex-basis: calc(10% - 50px);
+		box-sizing: border-box;
+	}
+
+	@media (max-width: 600px) {
+		.comments-section {
+			flex-wrap: wrap;
+			justify-content: flex-start;
+			padding: 0 10px;
+		}
+	}
+
+	.break {
+		flex-basis: 100%;
+		height: 0;
+	}
 </style>
 
 <div class="header">
@@ -90,5 +123,9 @@
 </div>
 
 <div class="metadata-section">
+
+</div>
+
+<div class="comments-section">
 
 </div>

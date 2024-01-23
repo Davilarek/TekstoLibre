@@ -79,6 +79,47 @@ function getTextBetween(text, start, end) {
 	return results;
 }
 
+/**
+ * @template {keyof HTMLElementTagNameMap} K
+ * @param {K} tag
+ * @template T
+ * @param {Record<keyof HTMLElement, T>} props
+ * @returns {HTMLElementTagNameMap[K]}
+ */
+function docCreateElement(tag, props = {}, childNodes = [], attrs = {}) {
+	const element = document.createElement(tag);
+
+	for (const [key, value] of Object.entries(props)) {
+		element[key] = value;
+	}
+
+	for (const node of childNodes) {
+		if (node instanceof Node) {
+			element.appendChild(node);
+		}
+	}
+
+	for (const [key, value] of Object.entries(attrs)) {
+		element.setAttribute(key, value);
+	}
+
+	return element;
+}
+/**
+ * @param {Date} date
+ */
+function makeMinimalisticDateTimeFormat(date) {
+	const options = {
+		year: 'numeric',
+		month: 'numeric',
+		day: 'numeric',
+		hour: 'numeric',
+		minute: 'numeric',
+	};
+
+	// helps keep user's preferred date format
+	return date.toLocaleDateString(undefined, options);
+}
 function setupElements() {
 	const searchButton = document.getElementById(`searchButton`);
 	const songSearch = document.getElementById(`songSearch`);
@@ -152,6 +193,31 @@ function loadLyricsViewer(currentUrlInfo) {
 				const videoFrame = document.getElementById("videoFrame");
 				videoFrame.style.display = "unset";
 				videoFrame.children[0].src = settingsManager.settings.embedUrlForVideos.value + lyrics.videoId;
+			}
+			if (lyrics.internalId) {
+				document.getElementsByClassName("comments-section")[0].before(docCreateElement("p", { textContent: "Loaded comments: ", style: "text-align: center;", id: "loadedCommentsCount" }, [docCreateElement("p", { textContent: "0", style: "display: inline;" })]));
+				document.getElementsByClassName("comments-section")[0].appendChild(docCreateElement("button", {
+					textContent: "Load comments",
+					onclick() {
+						TekstowoAPIInstance.requestComments(lyrics.internalId, document.getElementById("loadedCommentsCount").children[0].textContent).then(x => {
+							console.log("Got API response:", x);
+							document.getElementById("loadedCommentsCount").children[0].textContent = parseInt(document.getElementById("loadedCommentsCount").children[0].textContent) + x.length;
+							for (let index = 0; index < x.length; index++) {
+								const comment = x[index];
+								const commentElement = docCreateElement('div', { class: 'comment', id: 'commentId123' }, [
+									docCreateElement('div', { className: 'comment-id', style: 'font-size: 0.8em; color: #888;', id: `comment_${comment.commentId}`, textContent: comment.commentId }),
+									docCreateElement('div', { className: 'comment-username', style: 'font-weight: bold; color: #4CAF50;', textContent: comment.username }),
+									docCreateElement('div', { className: 'comment-date', style: 'font-size: 0.8em; color: #888;', textContent: `${makeMinimalisticDateTimeFormat(comment.date)} (Europe/Warsaw)` }),
+									docCreateElement('div', { className: 'comment-score', style: 'font-size: 0.8em; color: #4CAF50;', textContent: `(${comment.score})` }),
+									comment.parentCommentId != '' ? docCreateElement("div", { className: 'comment-replyId', style: 'color: #4CAF50;', textContent: `Replying to ` }, [ docCreateElement("a", { href: `#comment_${comment.parentCommentId}`, textContent: comment.parentCommentId }) ]) : false,
+									docCreateElement('div', { className: 'comment-text', style: 'margin-top: 10px;', innerHTML: comment.commentText.replace(/\n/g, '<br>') }),
+								].filter(Boolean));
+								document.getElementsByClassName("comments-section")[0].appendChild(docCreateElement("div", { className: "break", style: "margin-top: 25px;" }));
+								document.getElementsByClassName("comments-section")[0].appendChild(commentElement);
+							}
+						});
+					},
+				}));
 			}
 			document.getElementsByClassName("metadata-section")[0].appendChild(newTable);
 			document.title = lyrics.lyricsName + " - lyrics and translation of the song";

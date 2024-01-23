@@ -20,7 +20,7 @@ To self host, you need to have Node.js installed (latest LTS recommended).
 - [ ] Wanted lyrics list
 - [ ] Translation edit history
 - [ ] Lyrics edit history
-- [ ] Comments view
+- [x] Comments view
 - [x] Song's video
 
 ## Not planned
