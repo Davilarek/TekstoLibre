@@ -212,7 +212,7 @@ function loadLyricsViewer(currentUrlInfo) {
 									docCreateElement('div', { className: 'comment-username', style: 'font-weight: bold; color: #4CAF50;', textContent: comment.username }),
 									docCreateElement('div', { className: 'comment-date', style: 'font-size: 0.8em; color: #888;', textContent: `${makeMinimalisticDateTimeFormat(comment.date)} (Europe/Warsaw)` }),
 									docCreateElement('div', { className: 'comment-score', style: 'font-size: 0.8em; color: #4CAF50;', textContent: `(${comment.score})` }),
-									comment.parentCommentId != '' ? docCreateElement("div", { className: 'comment-replyId', style: 'color: #4CAF50;', textContent: `Replying to ` }, [ docCreateElement("a", { href: `#comment_${comment.parentCommentId}`, textContent: comment.parentCommentId }) ]) : false,
+									comment.parentCommentId != '' ? docCreateElement("div", { className: 'comment-replyId', style: 'color: #4CAF50;', textContent: `Replying to ` }, [docCreateElement("a", { href: `#comment_${comment.parentCommentId}`, textContent: comment.parentCommentId })]) : false,
 									docCreateElement('div', { className: 'comment-text', style: 'margin-top: 10px;', innerHTML: comment.commentText.replace(/\n/g, '<br>') }),
 								].filter(Boolean));
 								document.getElementsByClassName("comments-section")[0].appendChild(docCreateElement("div", { className: "break", style: "margin-top: 25px;" }));
