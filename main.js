@@ -151,6 +151,9 @@ function loadLyricsViewer(currentUrlInfo) {
 			if (!lyrics) return;
 			const lyricsNormal = document.getElementsByClassName("lyrics-column")[0].getElementsByTagName("p")[0];
 			const lyricsTranslated = document.getElementsByClassName("translation-column")[0].getElementsByTagName("p")[0];
+			if (lyrics.aiGeneratedTranslation == true) {
+				document.getElementsByClassName("translation-column")[0].getElementsByTagName("h2")[0].textContent += " (AI)";
+			}
 			const lyricsHeader = document.getElementsByClassName("header")[0].getElementsByTagName("h1")[0];
 			lyricsNormal.innerHTML = lyrics.original.replace(/\n/g, '<br>');
 			lyricsTranslated.innerHTML = lyrics.translated.replace(/\n/g, '<br>');
