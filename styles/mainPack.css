@@ -20,7 +20,7 @@ h1 {
 
 .search-bar input[type="text"] {
 	padding: 5px;
-	width: 150px;
+	width: calc(150px * 2);
 }
 
 .search-bar input[type="text"]:first-child {

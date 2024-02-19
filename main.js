@@ -122,17 +122,17 @@ function makeMinimalisticDateTimeFormat(date) {
 }
 function setupElements() {
 	const searchButton = document.getElementById(`searchButton`);
-	const songSearch = document.getElementById(`songSearch`);
-	const artistSearch = document.getElementById(`artistSearch`);
+	// const songSearch = document.getElementById(`songSearch`);
+	// const artistSearch = document.getElementById(`artistSearch`);
+	const querySearch = document.getElementById(`querySearch`);
 	searchButton.addEventListener('click', () => {
-		location.href = (useQuestionMark ? '?' : '') + "szukaj,wykonawca," + artistSearch.value + ",tytul," + songSearch.value.replace(/\s/g, "+") + ".html";
+		location.href = (useQuestionMark ? '?' : '') + "szukaj," + querySearch.value.replace(/\s/g, "+") + ".html";
 	});
-	songSearch.onkeydown = (ev) => {
+	querySearch.onkeydown = (ev) => {
 		if (ev.key == "Enter") {
 			searchButton.click();
 		}
 	};
-	artistSearch.onkeydown = songSearch.onkeydown;
 }
 async function injectHTML(name) {
 	const resp = await fetch(name);
@@ -230,8 +230,9 @@ function loadLyricsViewer(currentUrlInfo) {
 function loadSearchResults(currentUrlInfo) {
 	injectHTML('./presets/search.html').then(() => {
 		const operation = currentUrlInfo.split(",")[0];
-		const settings = createObjectFromCommaSeparatedString(currentUrlInfo.split(operation + ",")[1]);
-		if (settings.tytul) settings.tytul = settings.tytul.split(".html")[0];
+		const settings = createObjectFromCommaSeparatedString(currentUrlInfo.split(operation + ",")[1].split(",").filter((x, y) => y != 0).join(","));
+		// if (settings.tytul) settings.tytul = settings.tytul.split(".html")[0];
+		settings.tytul = currentUrlInfo.split(operation + ",")[1].split(".html")[0].split(",")[0];
 		if (settings.strona) settings.strona = settings.strona.split(".html")[0];
 		const pageSelection = document.getElementsByClassName("page-selection")[0];
 		const offsetNum = calculatePageOffset((settings.strona ?? 1) - 1);
@@ -279,7 +280,7 @@ function loadSearchResults(currentUrlInfo) {
 		// 	}
 		// 	document.title = "Search - lyrics and translations";
 		// });
-		TekstowoAPIInstance.search(settings.wykonawca, settings.tytul, { page: settings.strona, includePageCount: true }).then(searchResults => {
+		TekstowoAPIInstance.search(settings.tytul, { page: settings.strona, includePageCount: true }).then(searchResults => {
 			console.log("Got API response:", searchResults);
 			const template = document.getElementsByClassName("result-item")[0].innerHTML;
 			const baseElement = document.getElementsByClassName("results-container")[0];
@@ -325,7 +326,7 @@ function loadSearchResults(currentUrlInfo) {
 					const newButton = document.createElement('button');
 					newButton.textContent = i + 1;
 					newButton.onclick = () => {
-						location.href = (useQuestionMark ? '?' : '') + "szukaj,wykonawca," + settings.wykonawca + ",tytul," + settings.tytul + ",strona," + (i + 1) + ".html";
+						location.href = (useQuestionMark ? '?' : '') + "szukaj," + settings.tytul + ",strona," + (i + 1) + ".html";
 					};
 					if ((i + 1).toString() == settings.strona || (settings.strona == undefined && (i + 1) == 1))
 						newButton.style.color = "red";
