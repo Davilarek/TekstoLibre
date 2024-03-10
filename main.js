@@ -198,7 +198,7 @@ function loadLyricsViewer(currentUrlInfo) {
 				videoFrame.children[0].src = settingsManager.settings.embedUrlForVideos.value + lyrics.videoId;
 			}
 			if (lyrics.internalId) {
-				document.getElementsByClassName("comments-section")[0].before(docCreateElement("p", { textContent: "Loaded comments: ", style: "text-align: center;", id: "loadedCommentsCount" }, [docCreateElement("p", { textContent: "0", style: "display: inline;" })]));
+				document.getElementsByClassName("comments-section")[0].before(docCreateElement("p", { textContent: "Loaded comments: ", style: "text-align: center;", id: "loadedCommentsCount" }, [docCreateElement("p", { textContent: "0", style: "display: inline;" }), docCreateElement("p", { textContent: `/${lyrics.commentCount}`, style: "display: inline;" })]));
 				document.getElementsByClassName("comments-section")[0].appendChild(docCreateElement("button", {
 					textContent: "Load comments",
 					onclick() {
