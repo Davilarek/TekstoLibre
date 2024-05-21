@@ -134,7 +134,19 @@ function setupElements() {
 		}
 	};
 }
+/**
+ * @param {string} name
+ */
 async function injectHTML(name) {
+	try {
+		const targetUrl = new URL(name, "https://localhost");
+		if (!targetUrl.pathname.endsWith(".html"))
+			throw new Error("Doesn't end with `.html`.");
+	}
+	catch (error) {
+		console.error("Got bad URL on", name, error);
+		return;
+	}
 	const resp = await fetch(name);
 	const respText = await resp.text();
 	const injectionPoint = document.getElementById('injectionPoint');
