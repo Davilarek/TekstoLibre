@@ -207,7 +207,7 @@ function loadLyricsViewer(currentUrlInfo) {
 							document.getElementById("loadedCommentsCount").children[0].textContent = parseInt(document.getElementById("loadedCommentsCount").children[0].textContent) + x.length;
 							for (let index = 0; index < x.length; index++) {
 								const comment = x[index];
-								const commentElement = docCreateElement('div', { class: 'comment', id: 'commentId123' }, [
+								const commentElement = docCreateElement('div', { class: 'comment' }, [
 									docCreateElement('div', { className: 'comment-id', style: 'font-size: 0.8em; color: #888;', id: `comment_${comment.commentId}`, textContent: comment.commentId }),
 									docCreateElement('div', { className: 'comment-username', style: 'font-weight: bold; color: #4CAF50;', textContent: comment.username }),
 									docCreateElement('div', { className: 'comment-date', style: 'font-size: 0.8em; color: #888;', textContent: `${makeMinimalisticDateTimeFormat(comment.date)} (Europe/Warsaw)` }),
