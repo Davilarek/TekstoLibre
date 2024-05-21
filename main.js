@@ -126,7 +126,7 @@ function setupElements() {
 	// const artistSearch = document.getElementById(`artistSearch`);
 	const querySearch = document.getElementById(`querySearch`);
 	searchButton.addEventListener('click', () => {
-		location.href = (useQuestionMark ? '?' : '') + "szukaj," + querySearch.value.replace(/\s/g, "+") + ".html";
+		location.href = (useQuestionMark ? '?' : '') + `${TekstowoAPIInstance.ConstantURLPaths.search},` + querySearch.value.replace(/\s/g, "+") + ".html";
 	});
 	querySearch.onkeydown = (ev) => {
 		if (ev.key == "Enter") {
@@ -304,7 +304,7 @@ function loadSearchResults(currentUrlInfo) {
 				newElement.style.cssText = "";
 				newElement.classList.add("result-item");
 				newElement.getElementsByTagName("h3")[0].textContent = offsetNum(i + 1).toString() + ".";
-				const urlCreated = (useQuestionMark ? '?' : '') + "piosenka," + Object.values(searchResults.songs)[i] + ".html";
+				const urlCreated = (useQuestionMark ? '?' : '') + `${TekstowoAPIInstance.ConstantURLPaths.song},` + Object.values(searchResults.songs)[i] + ".html";
 				// newElement.getElementsByTagName("p")[0].innerHTML = `<a style="color: unset; text-decoration: unset;" href="${urlCreated}">${element}</a>`; // that's lazy
 				const aElementForP = document.createElement('a');
 				aElementForP.style.cssText = `color: unset; text-decoration: unset;`;
@@ -322,7 +322,7 @@ function loadSearchResults(currentUrlInfo) {
 				newElement.style.cssText = "";
 				newElement.classList.add("result-item");
 				newElement.getElementsByTagName("h3")[0].textContent = (i + 1).toString() + ".";
-				const urlCreated = (useQuestionMark ? '?' : '') + "piosenki_artysty," + Object.values(searchResults.artists)[i] + ".html";
+				const urlCreated = (useQuestionMark ? '?' : '') + `${TekstowoAPIInstance.ConstantURLPaths.artistSongs},` + Object.values(searchResults.artists)[i] + ".html";
 				// newElement.getElementsByTagName("p")[0].innerHTML = `<a style="color: unset; text-decoration: unset;" href="${urlCreated}">${element}</a>`; // that's lazy
 				const aElementForP = document.createElement('a');
 				aElementForP.style.cssText = `color: unset; text-decoration: unset;`;
@@ -338,7 +338,7 @@ function loadSearchResults(currentUrlInfo) {
 					const newButton = document.createElement('button');
 					newButton.textContent = i + 1;
 					newButton.onclick = () => {
-						location.href = (useQuestionMark ? '?' : '') + "szukaj," + settings.tytul + ",strona," + (i + 1) + ".html";
+						location.href = (useQuestionMark ? '?' : '') + `${TekstowoAPIInstance.ConstantURLPaths.search},` + settings.tytul + ",strona," + (i + 1) + ".html";
 					};
 					if ((i + 1).toString() == settings.strona || (settings.strona == undefined && (i + 1) == 1))
 						newButton.style.color = "red";
@@ -452,7 +452,7 @@ function loadArtistSongList(currentUrlInfo) {
 					TekstowoAPIInstance.Sorting.SortMode[Array.from(sortOptionsMode.children).find(x2 => x2.selected).value],
 					TekstowoAPIInstance.Sorting.SortDirection[Array.from(sortOptionsDir.children).find(x2 => x2.selected).value],
 				];
-				location.href = (useQuestionMark ? '?' : '') + "piosenki_artysty," + operations[0] + "," + additionalStuff.join(",") + ",strona,1.html";
+				location.href = (useQuestionMark ? '?' : '') + `${TekstowoAPIInstance.ConstantURLPaths.artistSongs},` + operations[0] + "," + additionalStuff.join(",") + ",strona,1.html";
 			};
 			sortOptionsDiv.appendChild(sortConfirmButton);
 			baseElement.before(sortOptionsDiv);
@@ -465,7 +465,7 @@ function loadArtistSongList(currentUrlInfo) {
 				newElement.style.cssText = "";
 				newElement.classList.add("result-item");
 				newElement.getElementsByTagName("h3")[0].textContent = offsetNum(i + 1).toString() + ".";
-				const urlCreated = (useQuestionMark ? '?' : '') + "piosenka," + element.value + ".html";
+				const urlCreated = (useQuestionMark ? '?' : '') + `${TekstowoAPIInstance.ConstantURLPaths.song},` + element.value + ".html";
 				// newElement.getElementsByTagName("p")[0].innerHTML = `<a style="color: unset; text-decoration: unset;" href="${urlCreated}">${element}</a>`; // that's lazy
 				const aElementForP = document.createElement('a');
 				aElementForP.style.cssText = `color: unset; text-decoration: unset;`;
@@ -484,7 +484,7 @@ function loadArtistSongList(currentUrlInfo) {
 						const additionalStuff = [];
 						options.sortMode && additionalStuff.push(options.sortMode);
 						options.sortDir && additionalStuff.push(options.sortDir);
-						location.href = (useQuestionMark ? '?' : '') + "piosenki_artysty," + operations[0] + "," + additionalStuff.join(",") + ",strona," + (i + 1) + ".html";
+						location.href = (useQuestionMark ? '?' : '') + `${TekstowoAPIInstance.ConstantURLPaths.artistSongs},` + operations[0] + "," + additionalStuff.join(",") + ",strona," + (i + 1) + ".html";
 					};
 					if ((i + 1).toString() == options.page || (options.page == undefined && (i + 1) == 1))
 						newButton.style.color = "red";
@@ -519,13 +519,13 @@ function processOperation() {
 	const currentUrl = (useQuestionMark ? location.search.slice(1) : location.href.substring(location.href.lastIndexOf('/') + 1));
 	const operation = currentUrl.split(",")[0];
 	switch (operation) {
-		case "piosenka":
+		case TekstowoAPIInstance.ConstantURLPaths.song:
 			loadLyricsViewer(currentUrl);
 			break;
-		case "szukaj":
+		case TekstowoAPIInstance.ConstantURLPaths.search:
 			loadSearchResults(currentUrl);
 			break;
-		case "piosenki_artysty":
+		case TekstowoAPIInstance.ConstantURLPaths.artistSongs:
 			loadArtistSongList(currentUrl);
 			break;
 		case "":
