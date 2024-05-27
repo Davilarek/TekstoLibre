@@ -534,7 +534,13 @@ function loadArtistProfile(currentUrlInfo) {
 							targetImgHolder2.append(docCreateElement("a", { href: "//tekstowo.pl" + element.hd, target: "_blank" }, [docCreateElement("img", { src: "//tekstowo.pl" + element.small })]));
 						}
 					}
+					else {
+						targetImgHolder2.append(docCreateElement("div", { className: "artist-container" }, [docCreateElement("table", { textContent: "If you want to see more images, enable them on Settings page." })]));
+					}
 				}
+			}
+			else {
+				document.getElementById("artistGallery").style.display = "none";
 			}
 			const artistDiscographyContainer = document.getElementById("artist-discography");
 			artistDiscographyContainer.append(docCreateElement("table", undefined, [docCreateElement("ol", undefined,
