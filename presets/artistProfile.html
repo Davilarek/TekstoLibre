@@ -1,0 +1,129 @@
+<style>
+    .container {
+        display: flex;
+        margin: 20px auto;
+        max-width: 800px;
+        justify-content: center;
+    }
+
+    h2 {
+        margin-top: 0;
+    }
+
+    p {
+        margin: 0;
+        /* white-space: nowrap; */
+        /* overflow: hidden; */
+        /* text-overflow: ellipsis; */
+    }
+
+    @media (max-width: 600px) {
+        .container {
+            flex-direction: column;
+        }
+    }
+
+    .artist-container {
+        display: flex;
+        justify-content: center;
+        margin-top: 20px;
+        max-width: 800px;
+        margin: 20px auto;
+    }
+
+    .artist-container table {
+        margin: 0 5px;
+        background-color: #444;
+        border: none;
+        color: #fff;
+        padding: 5px 10px;
+    }
+
+    @media (max-width: 600px) {
+        .artist-container {
+            flex-wrap: wrap;
+            justify-content: flex-start;
+            padding: 0 10px;
+        }
+
+        .artist-container table {
+            width: 100%;
+            margin-bottom: 10px;
+        }
+    }
+
+    .comments-section {
+        display: flex;
+        justify-content: center;
+        margin-top: 20px;
+        max-width: 800px;
+        margin: 20px auto;
+        flex-direction: column;
+    }
+
+    .comments-section button {
+        margin: 5px;
+        background-color: #444;
+        border: none;
+        color: #fff;
+        padding: 5px 10px;
+        cursor: pointer;
+        flex-basis: calc(10% - 50px);
+        box-sizing: border-box;
+    }
+
+    @media (max-width: 600px) {
+        .comments-section {
+            flex-wrap: wrap;
+            justify-content: flex-start;
+            padding: 0 10px;
+        }
+    }
+
+    .break {
+        flex-basis: 100%;
+        height: 0;
+    }
+
+    #artistMainImage>img {
+        min-width: 100%;
+        min-height: 100%;
+        width: auto;
+        height: auto;
+    }
+</style>
+<div class="header">
+    <h1></h1>
+</div>
+<!-- <br> -->
+<div class="container">
+    <div id="artistMainImage" style="display: none;">
+
+    </div>
+</div>
+<div class="header">
+    <h1>Description</h1>
+</div>
+<div id="artist-description" class="artist-container">
+
+</div>
+<br>
+<div class="header">
+    <h1>Discography</h1>
+</div>
+<div id="artist-discography" class="artist-container">
+
+</div>
+<br>
+<div class="header">
+    <h1>Gallery</h1>
+</div>
+<div class="container">
+    <div id="artistImages" style="display: none;">
+
+    </div>
+</div>
+<br>
+<div class="comments-section">
+
+</div>

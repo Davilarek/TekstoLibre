@@ -155,6 +155,37 @@ async function injectHTML(name) {
 // eslint-disable-next-line no-unused-vars
 const TekstowoAPIInstance = initializeTekstowo();
 // const TekstowoAPIInstance = initializeTekstowoAnyway();
+/**
+ * @param {Object} postInfo
+ * @param {string} postInfo.internalId
+ * @param {number} postInfo.commentCount
+ * @param {'S' | 'A'} postType
+ */
+function injectComments(postInfo, postType) {
+	document.getElementsByClassName("comments-section")[0].before(docCreateElement("p", { textContent: "Loaded comments: ", style: "text-align: center;", id: "loadedCommentsCount" }, [docCreateElement("p", { textContent: "0", style: "display: inline;" }), docCreateElement("p", { textContent: `/${postInfo.commentCount}`, style: "display: inline;" })]));
+	document.getElementsByClassName("comments-section")[0].appendChild(docCreateElement("button", {
+		textContent: "Load comments",
+		onclick() {
+			TekstowoAPIInstance.requestComments(postInfo.internalId, document.getElementById("loadedCommentsCount").children[0].textContent, postType).then(x => {
+				console.log("Got API response:", x);
+				document.getElementById("loadedCommentsCount").children[0].textContent = parseInt(document.getElementById("loadedCommentsCount").children[0].textContent) + x.length;
+				for (let index = 0; index < x.length; index++) {
+					const comment = x[index];
+					const commentElement = docCreateElement('div', { class: 'comment' }, [
+						docCreateElement('div', { className: 'comment-id', style: 'font-size: 0.8em; color: #888;', id: `comment_${comment.commentId}`, textContent: comment.commentId }),
+						docCreateElement('div', { className: 'comment-username', style: 'font-weight: bold; color: #4CAF50;', textContent: comment.username }),
+						docCreateElement('div', { className: 'comment-date', style: 'font-size: 0.8em; color: #888;', textContent: `${makeMinimalisticDateTimeFormat(comment.date)} (Europe/Warsaw)` }),
+						docCreateElement('div', { className: 'comment-score', style: 'font-size: 0.8em; color: #4CAF50;', textContent: `(${comment.score})` }),
+						comment.parentCommentId != '' ? docCreateElement("div", { className: 'comment-replyId', style: 'color: #4CAF50;', textContent: `Replying to ` }, [docCreateElement("a", { href: `#comment_${comment.parentCommentId}`, textContent: comment.parentCommentId })]) : false,
+						docCreateElement('div', { className: 'comment-text', style: 'margin-top: 10px;', innerHTML: comment.commentText.replace(/\n/g, '<br>') }),
+					].filter(Boolean));
+					document.getElementsByClassName("comments-section")[0].appendChild(docCreateElement("div", { className: "break", style: "margin-top: 25px;" }));
+					document.getElementsByClassName("comments-section")[0].appendChild(commentElement);
+				}
+			});
+		},
+	}));
+}
 function loadLyricsViewer(currentUrlInfo) {
 	injectHTML('./presets/song.html').then(() => {
 		const operation = currentUrlInfo.split(",")[0];
@@ -210,29 +241,7 @@ function loadLyricsViewer(currentUrlInfo) {
 				videoFrame.children[0].src = settingsManager.settings.embedUrlForVideos.value + lyrics.videoId;
 			}
 			if (lyrics.internalId) {
-				document.getElementsByClassName("comments-section")[0].before(docCreateElement("p", { textContent: "Loaded comments: ", style: "text-align: center;", id: "loadedCommentsCount" }, [docCreateElement("p", { textContent: "0", style: "display: inline;" }), docCreateElement("p", { textContent: `/${lyrics.commentCount}`, style: "display: inline;" })]));
-				document.getElementsByClassName("comments-section")[0].appendChild(docCreateElement("button", {
-					textContent: "Load comments",
-					onclick() {
-						TekstowoAPIInstance.requestComments(lyrics.internalId, document.getElementById("loadedCommentsCount").children[0].textContent).then(x => {
-							console.log("Got API response:", x);
-							document.getElementById("loadedCommentsCount").children[0].textContent = parseInt(document.getElementById("loadedCommentsCount").children[0].textContent) + x.length;
-							for (let index = 0; index < x.length; index++) {
-								const comment = x[index];
-								const commentElement = docCreateElement('div', { class: 'comment' }, [
-									docCreateElement('div', { className: 'comment-id', style: 'font-size: 0.8em; color: #888;', id: `comment_${comment.commentId}`, textContent: comment.commentId }),
-									docCreateElement('div', { className: 'comment-username', style: 'font-weight: bold; color: #4CAF50;', textContent: comment.username }),
-									docCreateElement('div', { className: 'comment-date', style: 'font-size: 0.8em; color: #888;', textContent: `${makeMinimalisticDateTimeFormat(comment.date)} (Europe/Warsaw)` }),
-									docCreateElement('div', { className: 'comment-score', style: 'font-size: 0.8em; color: #4CAF50;', textContent: `(${comment.score})` }),
-									comment.parentCommentId != '' ? docCreateElement("div", { className: 'comment-replyId', style: 'color: #4CAF50;', textContent: `Replying to ` }, [docCreateElement("a", { href: `#comment_${comment.parentCommentId}`, textContent: comment.parentCommentId })]) : false,
-									docCreateElement('div', { className: 'comment-text', style: 'margin-top: 10px;', innerHTML: comment.commentText.replace(/\n/g, '<br>') }),
-								].filter(Boolean));
-								document.getElementsByClassName("comments-section")[0].appendChild(docCreateElement("div", { className: "break", style: "margin-top: 25px;" }));
-								document.getElementsByClassName("comments-section")[0].appendChild(commentElement);
-							}
-						});
-					},
-				}));
+				injectComments(lyrics);
 			}
 			document.getElementsByClassName("metadata-section")[0].appendChild(newTable);
 			document.title = lyrics.lyricsName + " - lyrics and translation of the song";
@@ -496,6 +505,48 @@ function loadArtistSongList(currentUrlInfo) {
 	});
 }
 /**
+ * @param {string} currentUrlInfo
+ */
+function loadArtistProfile(currentUrlInfo) {
+	injectHTML("./presets/artistProfile.html").then(() => {
+		const operations = currentUrlInfo.split(",").map(x => x.endsWith(".html") ? x.split(".html")[0] : x);
+		operations.shift();
+		const artistId = operations[0];
+		TekstowoAPIInstance.getArtistProfile(artistId).then(response => {
+			console.log("Got API response:", response);
+			const header = document.getElementsByClassName("header")[0].getElementsByTagName("h1")[0];
+			header.innerHTML = response.displayName;
+			const artistDescriptionField = document.getElementById("artist-description");
+			artistDescriptionField.appendChild(docCreateElement("table", { innerHTML: response.artistDescription.replace(/\n/g, '<br>') }));
+			if (response.commentCount > 0 && response.internalId != undefined) {
+				injectComments(response, "A");
+			}
+			if (settingsManager.settings.enableArtistMainImageLoading.value == true) {
+				const targetImgHolder = document.getElementById("artistMainImage");
+				targetImgHolder.style.display = "unset";
+				targetImgHolder.append(docCreateElement("img", { src: "//tekstowo.pl" + response.images[0].hd }));
+				const targetImgHolder2 = document.getElementById("artistImages");
+				targetImgHolder2.style.display = "unset";
+				if (response.images.length > 1) {
+					if (settingsManager.settings.enableArtistAllImagesLoading.value == true) {
+						for (let index = 1; index < response.images.length; index++) {
+							const element = response.images[index];
+							targetImgHolder2.append(docCreateElement("a", { href: "//tekstowo.pl" + element.hd, target: "_blank" }, [docCreateElement("img", { src: "//tekstowo.pl" + element.small })]));
+						}
+					}
+				}
+			}
+			const artistDiscographyContainer = document.getElementById("artist-discography");
+			artistDiscographyContainer.append(docCreateElement("table", undefined, [docCreateElement("ol", undefined,
+				response.discography.map(x =>
+					docCreateElement("li", { textContent: x.name }, [docCreateElement("p", { textContent: `(${x.year})`, style: "display: inline; padding-left: 1vw" }, undefined)]),
+				),
+			)]));
+			document.title = response.displayName + " - photos, discography";
+		});
+	});
+}
+/**
  * @param {number} pageNum
  */
 function calculatePageOffset(pageNum) {
@@ -527,6 +578,9 @@ function processOperation() {
 			break;
 		case TekstowoAPIInstance.ConstantURLPaths.artistSongs:
 			loadArtistSongList(currentUrl);
+			break;
+		case TekstowoAPIInstance.ConstantURLPaths.artistProfile:
+			loadArtistProfile(currentUrl);
 			break;
 		case "":
 			break;

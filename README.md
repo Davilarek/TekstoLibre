@@ -13,7 +13,7 @@ To self host, you need to have Node.js installed (latest LTS recommended).
 - [x] Lyrics + translation view
 - [x] "Go to official" button
 - [x] Artist's song list
-- [ ] Artist details
+- [X] Artist details
 - [ ] Popular songs list
 - [ ] Popular artists list
 - [ ] Wanted translations list

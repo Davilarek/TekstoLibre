@@ -255,6 +255,34 @@ const settingsManager = (() => {
 				},
 			],
 		},
+		"enableArtistMainImageLoading": {
+			propName: "enableArtistMainImageLoading",
+			description: "Enable loading of artist main images on artist details page? (The connection will not be proxied!)",
+			defaultValue: false,
+			type: "checkbox",
+			required: [
+				{
+					settingName: "enableUseOfLocalStorage",
+					toBeValue: true,
+				},
+			],
+		},
+		"enableArtistAllImagesLoading": {
+			propName: "enableArtistAllImagesLoading",
+			description: "Enable loading of all other artist images on artist details page? (The connection will not be proxied!)",
+			defaultValue: false,
+			type: "checkbox",
+			required: [
+				{
+					settingName: "enableUseOfLocalStorage",
+					toBeValue: true,
+				},
+				{
+					settingName: "enableArtistMainImageLoading",
+					toBeValue: true,
+				},
+			],
+		},
 	};
 	return new SettingsManager(presets);
 })();
