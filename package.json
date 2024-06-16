@@ -10,6 +10,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "node-html-parser": "^6.1.13"
+    "jsdom": "^24.1.0",
+    "tekstowo-api": "github:Davilarek/Tekstowo-Unofficial-API"
   }
 }

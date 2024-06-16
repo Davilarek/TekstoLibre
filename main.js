@@ -125,6 +125,11 @@ function setupElements() {
 	// const songSearch = document.getElementById(`songSearch`);
 	// const artistSearch = document.getElementById(`artistSearch`);
 	const querySearch = document.getElementById(`querySearch`);
+	if (window.NO_JS) {
+		searchButton.remove();
+		querySearch.remove();
+		return;
+	}
 	searchButton.addEventListener('click', () => {
 		location.href = (useQuestionMark ? '?' : '') + `${TekstowoAPIInstance.ConstantURLPaths.search},` + querySearch.value.replace(/\s/g, "+") + ".html";
 	});
@@ -150,6 +155,8 @@ async function injectHTML(name) {
 	const resp = await fetch(name);
 	const respText = await resp.text();
 	const injectionPoint = document.getElementById('injectionPoint');
+	if (window.NO_JS)
+		injectionPoint.outerHTML_ = respText;
 	injectionPoint.outerHTML = respText;
 }
 // eslint-disable-next-line no-unused-vars
@@ -163,6 +170,8 @@ const TekstowoAPIInstance = initializeTekstowo();
  */
 function injectComments(postInfo, postType) {
 	document.getElementsByClassName("comments-section")[0].before(docCreateElement("p", { textContent: "Loaded comments: ", style: "text-align: center;", id: "loadedCommentsCount" }, [docCreateElement("p", { textContent: "0", style: "display: inline;" }), docCreateElement("p", { textContent: `/${postInfo.commentCount}`, style: "display: inline;" })]));
+	if (window.NO_JS)
+		return;
 	document.getElementsByClassName("comments-section")[0].appendChild(docCreateElement("button", {
 		textContent: "Load comments",
 		onclick() {
@@ -245,6 +254,8 @@ function loadLyricsViewer(currentUrlInfo) {
 			}
 			document.getElementsByClassName("metadata-section")[0].appendChild(newTable);
 			document.title = lyrics.lyricsName + " - lyrics and translation of the song";
+			if (window.NO_JS)
+				window.bridgeTest.finishedDeferred.resolve();
 		});
 	});
 }
@@ -345,16 +356,23 @@ function loadSearchResults(currentUrlInfo) {
 				const result = searchResults.pageCount;
 				for (let i = 0; i < result; i++) {
 					const newButton = document.createElement('button');
-					newButton.textContent = i + 1;
-					newButton.onclick = () => {
-						location.href = (useQuestionMark ? '?' : '') + `${TekstowoAPIInstance.ConstantURLPaths.search},` + settings.tytul + ",strona," + (i + 1) + ".html";
-					};
+					if (!window.NO_JS) {
+						newButton.textContent = i + 1;
+						newButton.onclick = () => {
+							location.href = (useQuestionMark ? '?' : '') + `${TekstowoAPIInstance.ConstantURLPaths.search},` + settings.tytul + ",strona," + (i + 1) + ".html";
+						};
+					}
+					else {
+						newButton.appendChild(docCreateElement("a", { textContent: i + 1, href: (useQuestionMark ? '?' : '') + `${TekstowoAPIInstance.ConstantURLPaths.search},` + settings.tytul + ",strona," + (i + 1) + ".html" }));
+					}
 					if ((i + 1).toString() == settings.strona || (settings.strona == undefined && (i + 1) == 1))
 						newButton.style.color = "red";
 					pageSelection.appendChild(newButton);
 				}
 			}
 			document.title = "Search - lyrics and translations";
+			if (window.NO_JS)
+				window.bridgeTest.finishedDeferred.resolve();
 		});
 	});
 }
@@ -501,6 +519,8 @@ function loadArtistSongList(currentUrlInfo) {
 				}
 			}
 			document.title = "Search - lyrics and translations";
+			if (window.NO_JS)
+				window.bridgeTest.finishedDeferred.resolve();
 		});
 	});
 }
@@ -549,6 +569,8 @@ function loadArtistProfile(currentUrlInfo) {
 				),
 			)]));
 			document.title = response.displayName + " - photos, discography";
+			if (window.NO_JS)
+				window.bridgeTest.finishedDeferred.resolve();
 		});
 	});
 }
@@ -588,11 +610,17 @@ function processOperation() {
 		case TekstowoAPIInstance.ConstantURLPaths.artistProfile:
 			loadArtistProfile(currentUrl);
 			break;
-		case "":
+		case "": {
+			if (window.NO_JS)
+				window.bridgeTest.finishedDeferred.resolve();
 			break;
-		default:
+		}
+		default: {
 			alert("Operation (currently) unsupported.");
+			if (window.NO_JS)
+				window.bridgeTest.finishedDeferred.resolve();
 			break;
+		}
 	}
 }
 // eslint-disable-next-line no-unused-vars
