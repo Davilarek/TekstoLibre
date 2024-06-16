@@ -34,8 +34,17 @@ const requestHandler = (req, res) => {
         res.end();
         return;
     }
+    if (parsed.base.startsWith("searchRedirect") && parsed.dir == __dirname) {
+        const parsedQuery = new URL(parsed.base, "http://localhost").searchParams.get("query").replace(/\s/g, "+");
+        // const target = new URL(`/szukaj,${parsedQuery}.html`, "http://" + req.headers.host + req.url.split(parsed.base)[0]);
+        const target = `./szukaj,${parsedQuery}.html`;
+        res.setHeader("Location", target);
+        res.writeHead(301);
+        res.end();
+        return;
+    }
     if (!allowJS) {
-        if (test.endsWith(".js")) {
+        if (test.endsWith(".js") || test.endsWith(".ico")) {
             res.writeHead(404);
             res.end();
             return;

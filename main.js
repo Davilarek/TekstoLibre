@@ -126,8 +126,16 @@ function setupElements() {
 	// const artistSearch = document.getElementById(`artistSearch`);
 	const querySearch = document.getElementById(`querySearch`);
 	if (window.NO_JS) {
-		searchButton.remove();
-		querySearch.remove();
+		const form = document.createElement('form');
+		form.action = "./searchRedirect";
+		form.method = "get";
+		form.classList.add('search-bar');
+		const inputQuery = docCreateElement("input", { id: "querySearch", placeholder: "Search", type: "text", name: "query" });
+		const buttonSearch = docCreateElement("button", { id: "searchButton", textContent: "Search", type: "submit" });
+		form.appendChild(inputQuery);
+		form.appendChild(buttonSearch);
+		const searchDiv = document.querySelector('.search-bar');
+		searchDiv.parentNode.replaceChild(form, searchDiv);
 		return;
 	}
 	searchButton.addEventListener('click', () => {
