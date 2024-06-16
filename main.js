@@ -155,8 +155,6 @@ async function injectHTML(name) {
 	const resp = await fetch(name);
 	const respText = await resp.text();
 	const injectionPoint = document.getElementById('injectionPoint');
-	if (window.NO_JS)
-		injectionPoint.outerHTML_ = respText;
 	injectionPoint.outerHTML = respText;
 }
 // eslint-disable-next-line no-unused-vars
