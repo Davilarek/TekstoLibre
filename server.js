@@ -4,53 +4,9 @@ const http = require('http');
 const fs = require("fs");
 const path = require('path');
 const JSDOM = require("jsdom");
-// const HTMLParser = require('node-html-parser');
-// HTMLParser.HTMLElement.prototype.getElementsByClassName = function (name) {
-//     return this.querySelectorAll("." + name);
-// };
-// HTMLParser.HTMLElement.prototype.createElement = function (type) {
-//     return HTMLParser.parse(`<${type}></${type}>`);
-// };
-// HTMLParser.Node.prototype.insertBefore = function (newNode, referenceNode) {
-//     let nodeToInsert = newNode;
-//     if (newNode.parentNode) {
-//         nodeToInsert = newNode.cloneNode(true);
-//     }
-//     if (referenceNode.previousSibling) {
-//         referenceNode.previousSibling.insertAdjacentHTML('afterend', nodeToInsert.outerHTML);
-//     }
-//     else {
-//         referenceNode.parentNode.insertAdjacentHTML('afterbegin', nodeToInsert.outerHTML);
-//     }
-//     if (newNode.parentNode) {
-//         newNode.parentNode.removeChild(newNode);
-//     }
-// };
-// HTMLParser.HTMLElement.prototype.before = function (...nodes) {
-//     const parent = this.parentNode;
-//     if (!parent) return;
-
-//     nodes.forEach(node => {
-//         parent.insertBefore(node, this);
-//     });
-// };
-// Object.defineProperty(HTMLParser.HTMLElement.prototype, "outerHTML_", {
-//     get() {
-//         return this.toString();
-//     },
-//     set(v) {
-//         this.parentNode.childNodes[this.parentNode.childNodes.indexOf(this)] = HTMLParser.parse(v);
-//     },
-// });
 const vm = require('node:vm');
 const myRequire = require;
 const allowJS = !(process.argv[2] == "false") ?? true;
-
-// function evalInScope(js, contextAsScope) {
-//     // @ts-ignore
-//     // eslint-disable-next-line quotes
-//     return new Function(["contextAsScope", "js"], "return (function() { with(this) { return eval(js); } }).call(contextAsScope)")(contextAsScope, js);
-// }
 
 /**
  * @param {http.IncomingMessage} req
@@ -93,20 +49,6 @@ const requestHandler = (req, res) => {
     if (!allowJS) {
         const rawHTML = fs.readFileSync("./index.html", "utf8");
         const root = new JSDOM.JSDOM(rawHTML);
-        /*         const globals = {
-                    require(...args) {
-                        console.log(myRequire(...args), args);
-                        return myRequire(...args);
-                    },
-                    globalThis: {
-                        get document() {
-                            return root;
-                        },
-                        localStorage: undefined,
-                    },
-                };
-                evalInScope(fs.readFileSync("./main.js", "utf8"), { ...globals, ...globals.globalThis }); */
-        // const TekstowoAPI = myRequire("tekstowo-api");
         const finishedDeferred = {
             resolve: undefined,
             reject: undefined,
