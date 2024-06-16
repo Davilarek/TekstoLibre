@@ -1,0 +1,17 @@
+{
+  "name": "TekstowoAlternativeFrontend",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "scripts": {
+    "serveNoJs": "node server.js false",
+    "serve": "node server.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "jsdom": "^24.1.0",
+    "tekstowo-api": "github:Davilarek/Tekstowo-Unofficial-API"
+  }
+}

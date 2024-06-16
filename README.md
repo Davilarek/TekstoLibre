@@ -6,7 +6,7 @@ It currently uses latest build of [Tekstowo-Unofficial-API](https://github.com/D
 To self host, you need to have Node.js installed (latest LTS recommended).
   1. Clone this repo
   2. `cd` to your cloned directory
-  3. `node server.js`
+  3. If you want to host with JavaScript disabled, run `node server.js false`, If JS is ok for you, `node server.js`
 
 ## Features
 - [x] Search bar
