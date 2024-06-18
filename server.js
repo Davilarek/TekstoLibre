@@ -6,7 +6,7 @@ const path = require('path');
 const JSDOM = require("jsdom");
 const vm = require('node:vm');
 const myRequire = require;
-const allowJS = !(process.argv[2] == "false") ?? true;
+const allowJS = process.env.NO_JS == undefined ? !(process.argv[2] == "false") : (process.env.NO_JS == "true" ? false : !(process.argv[2] == "false"));
 
 /**
  * @param {http.IncomingMessage} req
@@ -134,7 +134,7 @@ const requestHandler = (req, res) => {
 
 const server = http.createServer(requestHandler);
 
-server.listen(port, (err) => {
+server.listen(port, '0.0.0.0', (err) => {
     if (err) {
         return console.log('something bad happened', err);
     }

@@ -3,11 +3,18 @@ A free &amp; open source Tekstowo front-end.
 
 It currently uses latest build of [Tekstowo-Unofficial-API](https://github.com/Davilarek/Tekstowo-Unofficial-API) with SirJoshProxy option.
 ## Self-hosting
+### Manual
 To self host, you need to have Node.js installed (latest LTS recommended).
   1. Clone this repo
   2. `cd` to your cloned directory
   3. If you want to host with JavaScript disabled, run `node server.js false`, If JS is ok for you, `node server.js`
 
+### Docker
+Pull the image as usual, and then run<br/>
+`docker run -p7778:7778 <your image name>`<br/>
+If you want to host with JavaScript disabled, run<br/>
+`docker run -p7778:7778 -eNO_JS=true <your image name>`<br/>
+Obviously, replace `<your image name>` with your actual image name.<br/>
 ## Features
 - [x] Search bar
 - [x] Lyrics + translation view
