@@ -134,7 +134,7 @@ const requestHandler = (req, res) => {
 
 const server = http.createServer(requestHandler);
 
-server.listen(port, (err) => {
+server.listen(port, '0.0.0.0', (err) => {
     if (err) {
         return console.log('something bad happened', err);
     }
