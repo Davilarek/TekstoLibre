@@ -138,6 +138,7 @@ function setupElements() {
 		searchDiv.parentNode.replaceChild(form, searchDiv);
 		return;
 	}
+	querySearch.focus();
 	searchButton.addEventListener('click', () => {
 		location.href = (useQuestionMark ? '?' : '') + `${TekstowoAPIInstance.ConstantURLPaths.search},` + querySearch.value.replace(/\s/g, "+") + ".html";
 	});
