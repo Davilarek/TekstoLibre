@@ -26,6 +26,11 @@ const requestHandler = (req, res) => {
     //     return;
     // }
     const test = path.join(__dirname, req.url);
+    if (path.normalize(decodeURI(req.url)) !== decodeURI(req.url)) {
+        res.statusCode = 403;
+        res.end();
+        return;
+    }
     // console.log(test);
     const parsed = path.parse(test);
     // console.log(parsed);
