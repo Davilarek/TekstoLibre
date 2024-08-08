@@ -266,6 +266,7 @@ function loadLyricsViewer(currentUrlInfo) {
 		});
 	});
 }
+// eslint-disable-next-line no-unused-vars
 function loadSearchResults(currentUrlInfo) {
 	injectHTML('./presets/search.html').then(() => {
 		const operation = currentUrlInfo.split(",")[0];
@@ -608,9 +609,11 @@ function processOperation() {
 		case TekstowoAPIInstance.ConstantURLPaths.song:
 			loadLyricsViewer(currentUrl);
 			break;
+		/*
 		case TekstowoAPIInstance.ConstantURLPaths.search:
 			loadSearchResults(currentUrl);
 			break;
+		*/
 		case TekstowoAPIInstance.ConstantURLPaths.artistSongs:
 			loadArtistSongList(currentUrl);
 			break;
@@ -648,6 +651,6 @@ function openOfficial() {
 // setTimeout(processOperation, 500);
 if (localStorage && localStorage.getItem("settings"))
 	settingsManager.load(localStorage.getItem("settings"));
-setupElements();
+// setupElements();
 isSelfHostedPromise.then(processOperation);
 // processOperation(); // race condition; don't use directly!

@@ -16,7 +16,7 @@ If you want to host with JavaScript disabled, run<br/>
 `docker run -p7778:7778 -eNO_JS=true <your image name>`<br/>
 Obviously, replace `<your image name>` with your actual image name.<br/>
 ## Features
-- [x] Search bar
+- ~~[x] Search bar~~ Removed, see https://github.com/Davilarek/Tekstowo-Unofficial-API/commit/dd103fa9c8df32c80c830a29b708b7f95d1d99bf
 - [x] Lyrics + translation view
 - [x] "Go to official" button
 - [x] Artist's song list
