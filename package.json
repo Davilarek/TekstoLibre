@@ -11,7 +11,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "jsdom": "^24.1.0",
+    "jsdom": "^24.1.1",
     "tekstowo-api": "github:Davilarek/Tekstowo-Unofficial-API"
   }
 }
