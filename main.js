@@ -176,7 +176,7 @@ const TekstowoAPIInstance = initializeTekstowo();
  * @param {'S' | 'A'} postType
  */
 function injectComments(postInfo, postType) {
-	document.getElementsByClassName("comments-section")[0].before(docCreateElement("p", { textContent: "Loaded comments: ", style: "text-align: center;", id: "loadedCommentsCount" }, [docCreateElement("p", { textContent: "0", style: "display: inline;" }), docCreateElement("p", { textContent: `/${postInfo.commentCount}`, style: "display: inline;" })]));
+	document.getElementsByClassName("comments-section")[0].before(docCreateElement("div", { textContent: "Loaded comments: ", style: "text-align: center;", id: "loadedCommentsCount" }, [docCreateElement("p", { textContent: "0", style: "display: inline;" }), docCreateElement("p", { textContent: `/${postInfo.commentCount}`, style: "display: inline;" })]));
 	if (window.NO_JS)
 		return;
 	document.getElementsByClassName("comments-section")[0].appendChild(docCreateElement("button", {
