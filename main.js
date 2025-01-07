@@ -180,7 +180,7 @@ function injectComments(postInfo, postType) {
 	if (window.NO_JS)
 		return;
 	document.getElementsByClassName("comments-section")[0].appendChild(docCreateElement("button", {
-		textContent: "Load comments",
+		textContent: "Load more comments",
 		onclick() {
 			TekstowoAPIInstance.requestComments(postInfo.internalId, document.getElementById("loadedCommentsCount").children[0].textContent, postType).then(x => {
 				console.log("Got API response:", x);
