@@ -2,13 +2,15 @@
 /// <reference path="settings-manager.js"/>
 // const useQuestionMark = location.search.length > 0;
 /* globals settingsManager */
-let useQuestionMark = true;
-const isSelfHostedPromise = new Promise(resolve => {
-	fetch("./selfHost", { "method": "HEAD" }).then(x => {
-		useQuestionMark = x.status != 200;
-		resolve();
-	}).catch(console.error);
-});
+// let useQuestionMark = true;
+// const isSelfHostedPromise = new Promise(resolve => {
+// 	fetch("./selfHost", { "method": "HEAD" }).then(x => {
+// 		// useQuestionMark = x.status != 200;
+// 		resolve();
+// 	}).catch(console.error);
+// });
+const useQuestionMark = true;
+const isSelfHostedPromise = Promise.resolve();
 
 // eslint-disable-next-line no-unused-vars
 function initializeTekstowoAnyway(proxyType = 2) {
@@ -140,7 +142,8 @@ function setupElements() {
 	}
 	querySearch.focus();
 	searchButton.addEventListener('click', () => {
-		location.href = (useQuestionMark ? '?' : '') + `${TekstowoAPIInstance.ConstantURLPaths.search},` + querySearch.value.replace(/\s/g, "+") + ".html";
+		// location.href = (useQuestionMark ? '?' : '') + `${TekstowoAPIInstance.ConstantURLPaths.search},` + querySearch.value.replace(/\s/g, "+") + ".html";
+		location.href = (useQuestionMark ? '?' : '') + `${TekstowoAPIInstance.ConstantURLPaths.search}?search-query=` + querySearch.value.replace(/\s/g, "+");
 	});
 	querySearch.onkeydown = (ev) => {
 		if (ev.key == "Enter") {
@@ -204,8 +207,7 @@ function injectComments(postInfo, postType) {
 }
 function loadLyricsViewer(currentUrlInfo) {
 	injectHTML('./presets/song.html').then(() => {
-		const operation = currentUrlInfo.split(",")[0];
-		TekstowoAPIInstance.extractLyrics(currentUrlInfo.split(operation + ",")[1].split(".html")[0], { withMetadata: true, withVideoId: settingsManager.settings.enableVideos.value }).then((lyrics) => {
+		TekstowoAPIInstance.extractLyrics(currentUrlInfo, { withMetadata: true, withVideoId: settingsManager.settings.enableVideos.value }).then((lyrics) => {
 			console.log("Got API response:", lyrics);
 			if (!lyrics) return;
 			const lyricsNormal = document.getElementsByClassName("lyrics-column")[0].getElementsByTagName("p")[0];
@@ -268,58 +270,11 @@ function loadLyricsViewer(currentUrlInfo) {
 }
 function loadSearchResults(currentUrlInfo) {
 	injectHTML('./presets/search.html').then(() => {
-		const operation = currentUrlInfo.split(",")[0];
-		const settings = createObjectFromCommaSeparatedString(currentUrlInfo.split(operation + ",")[1].split(",").filter((x, y) => y != 0).join(","));
-		// if (settings.tytul) settings.tytul = settings.tytul.split(".html")[0];
-		settings.tytul = currentUrlInfo.split(operation + ",")[1].split(".html")[0].split(",")[0];
-		if (settings.strona) settings.strona = settings.strona.split(".html")[0];
-		const pageSelection = document.getElementsByClassName("page-selection")[0];
-		const offsetNum = calculatePageOffset((settings.strona ?? 1) - 1);
-		// debugger;
-		// TekstowoAPIInstance.searchLyrics(settings.wykonawca, settings.tytul, settings.strona, true).then((searchResults) => {
-		// 	// return;
-		// 	console.log("Got API response:", searchResults);
-		// 	const keys = Object.keys(searchResults);
-		// 	const template = document.getElementsByClassName("result-item")[0].innerHTML;
-		// 	const baseElement = document.getElementsByClassName("results-container")[0];
-		// 	for (let i = 0; i < keys.length; i++) {
-		// 		const element = keys[i];
-		// 		const newElement = document.createElement("div");
-		// 		newElement.innerHTML = template;
-		// 		newElement.style.cssText = "";
-		// 		newElement.classList.add("result-item");
-		// 		newElement.getElementsByTagName("h3")[0].textContent = (i + 1).toString() + ".";
-		// 		const urlCreated = (useQuestionMark ? '?' : '') + "piosenka," + Object.values(searchResults)[i] + ".html";
-		// 		newElement.getElementsByTagName("p")[0].innerHTML = `<a style="color: unset; text-decoration: unset;" href="${urlCreated}">${element}</a>`;
-		// 		baseElement.appendChild(newElement);
-		// 	}
-
-		// 	/* TekstowoAPIInstance.getPagesForSong(settings.wykonawca, settings.tytul).then((result) => {
-		// 		for (let i = 0; i < result; i++) {
-		// 			const newButton = document.createElement('button');
-		// 			newButton.textContent = i + 1;
-		// 			newButton.onclick = () => {
-		// 				location.href = (useQuestionMark ? '?' : '') + "szukaj,wykonawca," + settings.wykonawca + ",tytul," + settings.tytul + ",strona," + (i + 1) + ".html";
-		// 			};
-		// 			pageSelection.appendChild(newButton);
-		// 		}
-		// 	}); */
-		// 	if (searchResults.INTERNAL_PAGE_COUNT) {
-		// 		const result = searchResults.INTERNAL_PAGE_COUNT;
-		// 		for (let i = 0; i < result; i++) {
-		// 			const newButton = document.createElement('button');
-		// 			newButton.textContent = i + 1;
-		// 			newButton.onclick = () => {
-		// 				location.href = (useQuestionMark ? '?' : '') + "szukaj,wykonawca," + settings.wykonawca + ",tytul," + settings.tytul + ",strona," + (i + 1) + ".html";
-		// 			};
-		// 			if ((i + 1).toString() == settings.strona || settings.strona == undefined)
-		// 				newButton.style.color = "red";
-		// 			pageSelection.appendChild(newButton);
-		// 		}
-		// 	}
-		// 	document.title = "Search - lyrics and translations";
-		// });
-		TekstowoAPIInstance.search(settings.tytul, { page: settings.strona, includePageCount: true }).then(searchResults => {
+		console.log(currentUrlInfo);
+		const settings = {
+			query: currentUrlInfo.split("query=")[1],
+		};
+		TekstowoAPIInstance.search(settings.query, {}).then(searchResults => {
 			console.log("Got API response:", searchResults);
 			const template = document.getElementsByClassName("result-item")[0].innerHTML;
 			const baseElement = document.getElementsByClassName("results-container")[0];
@@ -330,8 +285,9 @@ function loadSearchResults(currentUrlInfo) {
 				newElement.innerHTML = template;
 				newElement.style.cssText = "";
 				newElement.classList.add("result-item");
-				newElement.getElementsByTagName("h3")[0].textContent = offsetNum(i + 1).toString() + ".";
-				const urlCreated = (useQuestionMark ? '?' : '') + `${TekstowoAPIInstance.ConstantURLPaths.song},` + Object.values(searchResults.songs)[i] + ".html";
+				newElement.getElementsByTagName("h3")[0].textContent = (i + 1).toString() + ".";
+				// const urlCreated = (useQuestionMark ? '?' : '') + `${TekstowoAPIInstance.ConstantURLPaths.song},` + Object.values(searchResults.songs)[i] + ".html";
+				const urlCreated = (useQuestionMark ? '?' : '') + Object.values(searchResults.songs)[i];
 				// newElement.getElementsByTagName("p")[0].innerHTML = `<a style="color: unset; text-decoration: unset;" href="${urlCreated}">${element}</a>`; // that's lazy
 				const aElementForP = document.createElement('a');
 				aElementForP.style.cssText = `color: unset; text-decoration: unset;`;
@@ -349,7 +305,8 @@ function loadSearchResults(currentUrlInfo) {
 				newElement.style.cssText = "";
 				newElement.classList.add("result-item");
 				newElement.getElementsByTagName("h3")[0].textContent = (i + 1).toString() + ".";
-				const urlCreated = (useQuestionMark ? '?' : '') + `${TekstowoAPIInstance.ConstantURLPaths.artistSongs},` + Object.values(searchResults.artists)[i] + ".html";
+				// const urlCreated = (useQuestionMark ? '?' : '') + `${TekstowoAPIInstance.ConstantURLPaths.artistSongs},` + Object.values(searchResults.artists)[i] + ".html";
+				const urlCreated = (useQuestionMark ? '?' : '') + Object.values(searchResults.artists)[i];
 				// newElement.getElementsByTagName("p")[0].innerHTML = `<a style="color: unset; text-decoration: unset;" href="${urlCreated}">${element}</a>`; // that's lazy
 				const aElementForP = document.createElement('a');
 				aElementForP.style.cssText = `color: unset; text-decoration: unset;`;
@@ -358,24 +315,6 @@ function loadSearchResults(currentUrlInfo) {
 				newElement.getElementsByTagName("p")[0].appendChild(aElementForP);
 				// baseElement.appendChild(newElement);
 				baseElement.getElementsByClassName("putResultsHere")[1].before(newElement);
-			}
-			if (searchResults.pageCount) {
-				const result = searchResults.pageCount;
-				for (let i = 0; i < result; i++) {
-					const newButton = document.createElement('button');
-					if (!window.NO_JS) {
-						newButton.textContent = i + 1;
-						newButton.onclick = () => {
-							location.href = (useQuestionMark ? '?' : '') + `${TekstowoAPIInstance.ConstantURLPaths.search},` + settings.tytul + ",strona," + (i + 1) + ".html";
-						};
-					}
-					else {
-						newButton.appendChild(docCreateElement("a", { textContent: i + 1, href: (useQuestionMark ? '?' : '') + `${TekstowoAPIInstance.ConstantURLPaths.search},` + settings.tytul + ",strona," + (i + 1) + ".html" }));
-					}
-					if ((i + 1).toString() == settings.strona || (settings.strona == undefined && (i + 1) == 1))
-						newButton.style.color = "red";
-					pageSelection.appendChild(newButton);
-				}
 			}
 			document.title = "Search - lyrics and translations";
 			if (window.NO_JS)
@@ -389,31 +328,38 @@ function loadSearchResults(currentUrlInfo) {
 function loadArtistSongList(currentUrlInfo) {
 	injectHTML('./presets/search.html').then(() => {
 		const pageSelection = document.getElementsByClassName("page-selection")[0];
-		const operations = currentUrlInfo.split(",").map(x => x.endsWith(".html") ? x.split(".html")[0] : x);
-		operations.shift();
+		// const operations = currentUrlInfo.split(",").map(x => x.endsWith(".html") ? x.split(".html")[0] : x);
+		// operations.shift();
+		// const options = {
+		// 	sortMode: undefined,
+		// 	sortDir: undefined,
+		// 	page: undefined,
+		// };
+		// const pageIndex = operations.indexOf("strona");
+		// if (pageIndex != -1) {
+		// 	options.page = operations[pageIndex + 1];
+		// }
+		// for (let index = 0; index < operations.length; index++) {
+		// 	const element = operations[index];
+		// 	let results = { isMode: undefined, value: undefined };
+		// 	results = { value: Object.keys(TekstowoAPIInstance.Sorting.SortMode).find(x => TekstowoAPIInstance.Sorting.SortMode[x] === element) ? element : undefined, isMode: true };
+		// 	if (!results.value)
+		// 		results = { value: Object.keys(TekstowoAPIInstance.Sorting.SortDirection).find(x => TekstowoAPIInstance.Sorting.SortDirection[x] === element) ? element : undefined, isMode: false };
+		// 	if (results.value != undefined) {
+		// 		if (results.isMode)
+		// 			options.sortMode = results.value;
+		// 		else
+		// 			options.sortDir = results.value;
+		// 	}
+		// }
+		const u = new URL(currentUrlInfo, "http://localhost/");
+		const path = u.pathname.substring(1);
 		const options = {
-			sortMode: undefined,
-			sortDir: undefined,
-			page: undefined,
+			sortMode: u.searchParams.get("sort") ?? undefined,
+			sortDir: u.searchParams.get("order") ?? undefined,
+			page: u.searchParams.get("strona") ?? undefined,
 		};
-		const pageIndex = operations.indexOf("strona");
-		if (pageIndex != -1) {
-			options.page = operations[pageIndex + 1];
-		}
-		for (let index = 0; index < operations.length; index++) {
-			const element = operations[index];
-			let results = { isMode: undefined, value: undefined };
-			results = { value: Object.keys(TekstowoAPIInstance.Sorting.SortMode).find(x => TekstowoAPIInstance.Sorting.SortMode[x] === element) ? element : undefined, isMode: true };
-			if (!results.value)
-				results = { value: Object.keys(TekstowoAPIInstance.Sorting.SortDirection).find(x => TekstowoAPIInstance.Sorting.SortDirection[x] === element) ? element : undefined, isMode: false };
-			if (results.value != undefined) {
-				if (results.isMode)
-					options.sortMode = results.value;
-				else
-					options.sortDir = results.value;
-			}
-		}
-		TekstowoAPIInstance.getArtistsSongList(operations[0], options).then(response => {
+		TekstowoAPIInstance.getArtistsSongList(path, options).then(response => {
 			console.log("Got API response:", response);
 			const offsetNum = calculatePageOffset((options.page ?? 1) - 1);
 			const template = document.getElementsByClassName("result-item")[0].innerHTML;
@@ -486,7 +432,8 @@ function loadArtistSongList(currentUrlInfo) {
 					TekstowoAPIInstance.Sorting.SortMode[Array.from(sortOptionsMode.children).find(x2 => x2.selected).value],
 					TekstowoAPIInstance.Sorting.SortDirection[Array.from(sortOptionsDir.children).find(x2 => x2.selected).value],
 				];
-				location.href = (useQuestionMark ? '?' : '') + `${TekstowoAPIInstance.ConstantURLPaths.artistSongs},` + operations[0] + "," + additionalStuff.join(",") + ",strona,1.html";
+				// location.href = (useQuestionMark ? '?' : '') + `${TekstowoAPIInstance.ConstantURLPaths.artistSongs},` + operations[0] + "," + additionalStuff.join(",") + ",strona,1.html";
+				location.href = (useQuestionMark ? '?' : '') + path + `?sort=${additionalStuff[0]}&order=${additionalStuff[1]}&strona=1`;
 			};
 			sortOptionsDiv.appendChild(sortConfirmButton);
 			baseElement.before(sortOptionsDiv);
@@ -518,7 +465,8 @@ function loadArtistSongList(currentUrlInfo) {
 						const additionalStuff = [];
 						options.sortMode && additionalStuff.push(options.sortMode);
 						options.sortDir && additionalStuff.push(options.sortDir);
-						location.href = (useQuestionMark ? '?' : '') + `${TekstowoAPIInstance.ConstantURLPaths.artistSongs},` + operations[0] + "," + additionalStuff.join(",") + ",strona," + (i + 1) + ".html";
+						// location.href = (useQuestionMark ? '?' : '') + `${TekstowoAPIInstance.ConstantURLPaths.artistSongs},` + operations[0] + "," + additionalStuff.join(",") + ",strona," + (i + 1) + ".html";
+						location.href = (useQuestionMark ? '?' : '') + path + `?sort=${additionalStuff[0]}&order=${additionalStuff[1]}&strona=${(i + 1)}`;
 					};
 					if ((i + 1).toString() == options.page || (options.page == undefined && (i + 1) == 1))
 						newButton.style.color = "red";
@@ -536,10 +484,9 @@ function loadArtistSongList(currentUrlInfo) {
  */
 function loadArtistProfile(currentUrlInfo) {
 	injectHTML("./presets/artistProfile.html").then(() => {
-		const operations = currentUrlInfo.split(",").map(x => x.endsWith(".html") ? x.split(".html")[0] : x);
-		operations.shift();
-		const artistId = operations[0];
-		TekstowoAPIInstance.getArtistProfile(artistId).then(response => {
+		const u = new URL(currentUrlInfo, "http://localhost/");
+		const path = u.pathname.substring(1);
+		TekstowoAPIInstance.getArtistProfile(path.split("wykonawca/")[1]).then(response => {
 			console.log("Got API response:", response);
 			const header = document.getElementsByClassName("header")[0].getElementsByTagName("h1")[0];
 			header.innerHTML = response.displayName;
@@ -585,25 +532,29 @@ function loadArtistProfile(currentUrlInfo) {
  * @param {number} pageNum
  */
 function calculatePageOffset(pageNum) {
-	const base = 30;
+	// const base = 30;
+	const base = 100;
 	// eslint-disable-next-line no-inline-comments
 	return /** @param {number} input */ (input) => (base * pageNum) + input;
-}
-function createObjectFromCommaSeparatedString(target) {
-	const KVPairs = target.split(',');
-	const finalObject = {};
-	for (let i = 0; i < KVPairs.length; i += 2) {
-		const key = KVPairs[i];
-		const value = KVPairs[i + 1];
-		finalObject[key] = value;
-	}
-	return finalObject;
 }
 function processOperation() {
 	const openOfficialHyperlink = document.getElementById(`openOfficialHyperlink`);
 	openOfficialHyperlink.href = createOfficialUrl();
 	const currentUrl = (useQuestionMark ? location.search.slice(1) : location.href.substring(location.href.lastIndexOf('/') + 1));
-	const operation = currentUrl.split(",")[0];
+	const operation = (() => {
+		if (currentUrl.length == 0)
+			return "";
+		if (currentUrl.startsWith("szukaj"))
+			return TekstowoAPIInstance.ConstantURLPaths.search;
+		if (currentUrl.includes("/")) {
+			if (currentUrl.startsWith("wykonawca/"))
+				return TekstowoAPIInstance.ConstantURLPaths.artistProfile;
+			return TekstowoAPIInstance.ConstantURLPaths.song;
+		}
+		else {
+			return TekstowoAPIInstance.ConstantURLPaths.artistSongs;
+		}
+	})();
 	switch (operation) {
 		case TekstowoAPIInstance.ConstantURLPaths.song:
 			loadLyricsViewer(currentUrl);
